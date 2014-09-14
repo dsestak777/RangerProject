@@ -50,9 +50,13 @@ public class DBUtilities {
         
        // createDatabase();
         createTables();
-      //  addUser("test2","123");
+        addUser("test2","123");
         boolean checkUser = doesUserExist ("test2");
         System.out.println(checkUser);
+        
+        boolean log = isUserLoggedIN("test2");
+        
+        System.out.println(log);
     }
     
     
@@ -195,6 +199,7 @@ public class DBUtilities {
                 + "(userID int(11) NOT NULL AUTO_INCREMENT,"
                 + "userName varchar(30) NOT NULL,"
                 + "userPassword varchar(30) NOT NULL,"
+                + "userLoggedIN boolean DEFAULT FALSE,"
                 + "PRIMARY KEY (userID))"
                 + "ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1";
         
@@ -203,7 +208,9 @@ public class DBUtilities {
                 + "postTitle varchar(30) NOT NULL,"
                 + "postCreatorName varchar(30) NOT NULL,"
                 + "postCreatorID int(11) NOT NULL,"
+                + "postMessage varchar(500) NOT NULL,"
                 + "postRating int(11) NOT NULL,"
+                + "numberOfRatings int(11) NOT NULL,"
                 + "PRIMARY KEY (postID))"
                 + "ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1";
         
@@ -250,6 +257,34 @@ public class DBUtilities {
         }
  
     }
+    
+    public static boolean isUserLoggedIN (String name) {
+        
+        boolean loggedIN = false;
+        
+        String checkLogIN = "SELECT userLoggedIN FROM users WHERE userName = ?";
+        
+        try {
+            
+            stmt = con.createStatement();
+            pstmt = con.prepareStatement(checkLogIN);
+            pstmt.setString(1, name);
+            rs = pstmt.executeQuery();
+            
+            rs.next();
+            
+            loggedIN = rs.getBoolean("userLoggedIN");
+            
+        }
+        catch (SQLException e) {
+            
+            System.out.println("execute query error!");
+            System.out.print(e);
+            
+        }
+        
+        return loggedIN;
+    } 
      
     public static boolean doesUserExist(String name) {
         
