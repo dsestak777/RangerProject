@@ -14,11 +14,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -217,9 +219,10 @@ public class DBUtilities {
                 + "postTitle varchar(30) NOT NULL,"
                 + "postCreatorName varchar(30) NOT NULL,"
                 + "postCreatorID int(11) NOT NULL,"
-                + "postMessage varchar(500) NOT NULL,"
+                + "postMessage varchar(300) NOT NULL,"
                 + "postRating int(11) DEFAULT 0,"
                 + "numberOfRatings int(11) DEFAULT 0,"
+                + "postDate DATE NOT NULL,"
                 + "PRIMARY KEY (postID))"
                 + "ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1";
         
@@ -435,6 +438,10 @@ public class DBUtilities {
     
     public static void addPost (String title, String userName, int userID, String message) {
         
+       // java.util.Date today = Calendar.getInstance().getTime();
+      //  Date date = new Date(00-00-0000);
+      //  java.util.Date now = new java.util.Date();
+         java.sql.Date date = getCurrentJavaSqlDate();
         
         Boolean log = isUserLoggedIN(userName);
         
@@ -449,7 +456,7 @@ public class DBUtilities {
         
             try { 
             
-                String addNewPost = "INSERT INTO postindex (postTitle, postCreatorName, postCreatorID, postMessage) VALUES (?,?,?,?)";
+                String addNewPost = "INSERT INTO postindex (postTitle, postCreatorName, postCreatorID, postMessage, postDate) VALUES (?,?,?,?,?)";
         
                 stmt = con.createStatement();
                 pstmt = con.prepareStatement(addNewPost);
@@ -457,6 +464,8 @@ public class DBUtilities {
                 pstmt.setString(2, userName);
                 pstmt.setInt(3, userID);
                 pstmt.setString(4, message);
+             //   pstmt.setDate(5,date.valueOf("1998-1-17"));
+                pstmt.setDate(5,date);
                 pstmt.executeUpdate();
                 
                 System.out.println("New Post Added!");
@@ -502,15 +511,69 @@ public class DBUtilities {
         
          String tableName = "postreply"+postNum;
         
-         createPostReplyTable = "CREATE TABLE IF NOT EXISTS " + tableName
+         createPostReplyTable = "CREATE TABLE IF NOT EXISTS "+ tableName+" "
                 + "(postID int(11) NOT NULL,"
-                + "replyMessage varchar(500) NOT NULL,"
+                + "replyMessage varchar(300) NOT NULL,"
                 + "replyCreator varchar(30) NOT NULL,"
                 + "PRIMARY KEY (postID))"
                 + "ENGINE=InnoDB DEFAULT CHARSET=latin1";
          
+         try {
+             
+             stmt = con.createStatement();
+             pstmt = con.prepareStatement(createPostReplyTable);
+           //  pstmt.setString(1, tableName);
+             pstmt.executeUpdate();
+             
+         } 
+         catch (SQLException e ) {
+                
+                System.out.println("execute query error!");
+                System.out.print(e);
+                
+                
+         }
          
       
     }
+    
+    public static void viewByUser (String user) {
+        
+        String viewUser = "SELECT * FROM postindex WHERE userName = ?";
+        
+        try {
+            
+            stmt = con.createStatement();
+            pstmt = con.prepareStatement(viewUser);
+            pstmt.setString(1, user);
+            rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                
+                
+                
+            }
+            
+        }
+         catch (SQLException e ) {
+                
+                System.out.println("execute query error!");
+                System.out.print(e);
+                
+                
+         }
+        
+        
+    }
+    
+    
+    
+    public static java.sql.Date getCurrentJavaSqlDate() {
+        
+        java.util.Date today = new java.util.Date();
+        
+        return new java.sql.Date(today.getTime());
+  }
+
       
 }
