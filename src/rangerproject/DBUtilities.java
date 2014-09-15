@@ -52,11 +52,19 @@ public class DBUtilities {
         createTables();
         addUser("test2","123");
         boolean checkUser = doesUserExist ("test2");
-        System.out.println(checkUser);
+        
+        System.out.println("does user exist =" + checkUser);
+        
+        logINUser ("test2","123");
+       
+        boolean password = checkPassword("test2","123");
         
         boolean log = isUserLoggedIN("test2");
-        
         System.out.println(log);
+        
+        
+        
+        
     }
     
     
@@ -262,7 +270,7 @@ public class DBUtilities {
         
         boolean loggedIN = false;
         
-        String checkLogIN = "SELECT userLoggedIN FROM users WHERE userName = ?";
+        String checkLogIN = "SELECT (userLoggedIN) FROM users WHERE userName = ?";
         
         try {
             
@@ -352,5 +360,115 @@ public class DBUtilities {
         
     } 
     
+    public static boolean checkPassword (String name, String password) {
+        
+        boolean passwordOK = false;
+        
+        String check = "SELECT userPassword FROM users WHERE userName = ?";
+        
+        try {
+            
+            stmt = con.createStatement();
+            pstmt = con.prepareStatement(check);
+            pstmt.setString(1, name);
+            rs = pstmt.executeQuery();
+            
+            rs.next();
+            
+            String realPass = rs.getString("userPassword");
+            
+             if (realPass.equals(password)) {
+                
+                System.out.println("password is correct!"); 
+                passwordOK = true;
+             
+            } else {
+                 
+                System.out.println("password is incorrect!");
+                passwordOK = false;
+            }
+            
+        }
+        catch (SQLException e) {
+            
+            System.out.println("execute query error!");
+            System.out.print(e);
+        }
+        
+        return passwordOK;
+    }
+    
+    
+    public static void logINUser (String name, String password) {
+        
+        boolean checkPass = checkPassword (name, password);
+        
+        if (checkPass == false) {
+            
+            
+         
+            return;
+        }
+        else { 
+            String login = "UPDATE users SET userLoggerIN = ? WHERE userName = ?";
+        
+            try {
+                stmt = con.createStatement();
+                pstmt = con.prepareStatement(login);
+                pstmt.setBoolean(1, true);
+                pstmt.setString(2, name);
+        
+            System.out.println("User is now logged in!");
+        
+            }
+            catch (SQLException e) {
+            
+                System.out.println("execute update error!");
+                System.out.print(e);
+            }
+            
+        }
+    }
+    
+    public static void addPost (String title, String userName, int userID, String message) {
+        
+        
+        Boolean log = isUserLoggedIN(userName);
+        
+        if (log == false ) {
+            
+            // user not logged in
+            System.out.println("User not logged in!!");
+            
+            return;
+            
+        } else {
+        
+            try { 
+            
+                String addNewPost = "INSERT INTO postindex (postTitle, postCreatorName, postCreatorID, postMessage) VALUES (?,?,?,?)";
+        
+                stmt = con.createStatement();
+                pstmt = con.prepareStatement(addNewPost);
+                pstmt.setString(1, title);
+                pstmt.setString(2, userName);
+                pstmt.setInt(3, userID);
+                pstmt.setString(4, message);
+                pstmt.executeUpdate();
+                
+                System.out.println("New Post Added!");
+                
+            }
+            catch (SQLException e ) {
+                
+                System.out.println("execute update error!");
+                System.out.print(e);
+                
+                
+            }
+        
+        
+        }
+    }
       
 }
