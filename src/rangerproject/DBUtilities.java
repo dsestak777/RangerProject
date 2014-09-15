@@ -19,6 +19,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.NoSuchElementException;
@@ -46,6 +48,7 @@ public class DBUtilities {
     private static PreparedStatement pstmt;
     private static ResultSet rs;
     private static CallableStatement ca;
+   
     
     
     
@@ -235,19 +238,6 @@ public class DBUtilities {
         **/
         
 
-        /**
-        try {
-            checkConnect();
-            //drop the game table if it exists
-            stmt.executeUpdate(dropString1);
-            
-        }
-        catch (SQLException e) {
-            
-            //catch exception 
-            System.out.println("The game table does not exist!");
-        }
-        **/
        
         
         try {
@@ -537,7 +527,9 @@ public class DBUtilities {
       
     }
     
-    public static void viewByUser (String user) {
+    public static ArrayList<MessageTopic> viewByUser (String user) {
+        
+        ArrayList<MessageTopic> messageIndex = new ArrayList<>();
         
         String viewUser = "SELECT * FROM postindex WHERE userName = ?";
         
@@ -550,6 +542,22 @@ public class DBUtilities {
             
             while (rs.next()) {
                 
+                int postnum = rs.getInt("postID");
+                String title = rs.getString("postTitle");
+                String creator = rs.getString("postCreatorName");
+                int creatorID = rs.getInt("postCreatorID");
+                String message = rs.getString("postMessage");
+                int rating = rs.getInt("postRating");
+                int noRate = rs.getInt("numberOfRatings");
+                String date = rs.getString("postDate");
+                Timestamp timestamp = rs.getTimestamp("MY_DATE");
+         
+             //   Date date = rs.getObject("postDate", Date.valueOf(LocalDate.MIN));
+                
+                MessageTopic topic = new MessageTopic (postnum, title, creator, creatorID, message, rating, noRate, timestamp);
+                
+                messageIndex.add(topic);
+               
                 
                 
             }
@@ -563,7 +571,7 @@ public class DBUtilities {
                 
          }
         
-        
+        return messageIndex;
     }
     
     
