@@ -35,6 +35,7 @@ public class DBUtilities {
     private static String createDBString;
     private static String createUsersString;
     private static String createPostIndexString;
+    private static String createPostReplyTable;
     private static String createString1;
     private static String createString2;
     private static String dropString1;
@@ -62,7 +63,7 @@ public class DBUtilities {
         boolean log = isUserLoggedIN("test2");
         System.out.println(log);
         
-        
+        addPost("First Post", "test2", 1, "ALL YOUR BASE ARE BELONG TO US");
         
         
     }
@@ -217,8 +218,8 @@ public class DBUtilities {
                 + "postCreatorName varchar(30) NOT NULL,"
                 + "postCreatorID int(11) NOT NULL,"
                 + "postMessage varchar(500) NOT NULL,"
-                + "postRating int(11) NOT NULL,"
-                + "numberOfRatings int(11) NOT NULL,"
+                + "postRating int(11) DEFAULT 0,"
+                + "numberOfRatings int(11) DEFAULT 0,"
                 + "PRIMARY KEY (postID))"
                 + "ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1";
         
@@ -403,27 +404,29 @@ public class DBUtilities {
         
         boolean checkPass = checkPassword (name, password);
         
+        System.out.println("checkpass =" + checkPass);
+     //   System.out.println(name);
+        
         if (checkPass == false) {
-            
-            
-         
+     
             return;
         }
         else { 
-            String login = "UPDATE users SET userLoggerIN = ? WHERE userName = ?";
+            String login = "UPDATE users SET userLoggedIN = 1 WHERE userName = ?";
         
             try {
                 stmt = con.createStatement();
                 pstmt = con.prepareStatement(login);
-                pstmt.setBoolean(1, true);
-                pstmt.setString(2, name);
+             //   pstmt.setInt(1, 1);
+                pstmt.setString(1, name);
+                pstmt.executeUpdate();
         
             System.out.println("User is now logged in!");
         
             }
             catch (SQLException e) {
             
-                System.out.println("execute update error!");
+                System.out.println("execute login error!");
                 System.out.print(e);
             }
             
@@ -466,9 +469,48 @@ public class DBUtilities {
                 
                 
             }
-        
-        
+            
+            String getPostID = "SELECT LAST_INSERT_ID()"; 
+            
+            try {
+                
+                stmt = con.createStatement();
+                pstmt = con.prepareStatement(getPostID);
+                rs = pstmt.executeQuery();
+                rs.next();
+                
+                int postNum = rs.getInt("last_insert_id()");
+                
+                System.out.println("post# =" + postNum);
+                
+                createReplyTable(postNum);
+            }
+            catch (SQLException e ) {
+                
+                System.out.println("execute query error!");
+                System.out.print(e);
+                
+                
+            }
+            
+            
         }
+    }
+    
+    public static void createReplyTable (int postNum) {
+        
+        
+         String tableName = "postreply"+postNum;
+        
+         createPostReplyTable = "CREATE TABLE IF NOT EXISTS " + tableName
+                + "(postID int(11) NOT NULL,"
+                + "replyMessage varchar(500) NOT NULL,"
+                + "replyCreator varchar(30) NOT NULL,"
+                + "PRIMARY KEY (postID))"
+                + "ENGINE=InnoDB DEFAULT CHARSET=latin1";
+         
+         
+      
     }
       
 }
