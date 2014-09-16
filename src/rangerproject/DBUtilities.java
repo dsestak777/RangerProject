@@ -49,6 +49,7 @@ public class DBUtilities {
     private static ResultSet rs;
     private static CallableStatement ca;
     private static ArrayList<MessageTopic> topics = new ArrayList<>();
+    private static ArrayList<MessagePost> post = new ArrayList<>();
     
     
     
@@ -83,6 +84,9 @@ public class DBUtilities {
      //       System.out.println(topics.get(i).toString());
      //   }
         
+        
+        ratePost(10,2);
+        
         topics = viewByDate();
         
         for (int i = 0; i<topics.size(); i++) {
@@ -90,10 +94,17 @@ public class DBUtilities {
             System.out.println(topics.get(i).toString());
         }
         
-        deletePost(1,"test2","123");
+    //    deletePost(1,"test2","123");
         
-    //    addReply(1, "Reply Title", "Reply Message", "test2");
-   //      addReply(1, "Reply Title2", "Reply Message2", "test2");
+    //    addReply(2, "Reply Title", "Reply Message", "test2");
+    //    addReply(2, "Reply Title2", "Reply Message2", "test2");
+        
+        post = viewChosenPost(2);
+        
+         for (int i = 0; i<post.size(); i++) {
+            
+            System.out.println(post.get(i).toString());
+        }
         
         logOutUser("test2");
         
@@ -163,10 +174,7 @@ public class DBUtilities {
             System.out.println("The game table does not exist!");
         }
         
-             
-         
-         
-         
+  
      }
      
      public static void createTables () {
@@ -763,5 +771,130 @@ public class DBUtilities {
             
         }
     }  
-      
+    
+    public static ArrayList<MessagePost> viewChosenPost (int postID) {
+        
+        ArrayList<MessagePost> messagePost = new ArrayList<>();
+        int postnum;
+        String title;
+        String creator;
+        String message;
+        Timestamp timestamp;
+        MessagePost post;
+  
+        String getTopic = "SELECT * FROM postindex WHERE postID = ?";
+        String viewPost = "SELECT * FROM postreply"+postID;
+        
+        try {
+            
+            stmt = con.createStatement();
+            pstmt = con.prepareStatement(getTopic);
+            pstmt.setInt(1, postID);
+            rs = pstmt.executeQuery();
+            rs.next();
+            
+                postnum = rs.getInt("postID");
+                title = rs.getString("postTitle");
+                creator = rs.getString("postCreatorName");
+                message = rs.getString("postMessage");
+                timestamp = rs.getTimestamp("postDate");
+                
+                post = new MessagePost (postnum, title, creator, message, timestamp);
+                
+                messagePost.add(post);
+                
+                
+            stmt = con.createStatement();
+            pstmt = con.prepareStatement(viewPost);
+            rs = pstmt.executeQuery();
+            
+            
+            
+            while (rs.next()) {
+                
+                postnum = rs.getInt("replyID");
+                title = rs.getString("replyTitle");
+                message = rs.getString("replyMessage");
+                creator = rs.getString("replyCreator");
+                timestamp = rs.getTimestamp("replyDate");
+                
+                post = new MessagePost (postnum, title, creator, message, timestamp);
+                
+                messagePost.add(post);
+                
+            }
+            
+        }
+         catch (SQLException e ) {
+                
+                System.out.println("execute view chosen post query error!");
+                System.out.print(e);
+                
+                
+         }
+        
+        return messagePost;
+    }
+    
+    
+    public static void ratePost (int rating, int postID) {
+        
+        int curRating = 0;
+        int numRatings = 0;
+                
+        String getNumRatings = "SELECT numberOfRatings FROM postindex WHERE postID = ?";
+        String getCurrentRating = "SELECT postRating FROM postindex WHERE postID = ?";        
+     
+        try{ 
+            stmt = con.createStatement();
+            pstmt = con.prepareStatement(getNumRatings);
+            pstmt.setInt(1, postID);
+            rs = pstmt.executeQuery();
+            
+            rs.next();
+            numRatings = rs.getInt("numberOfRatings");
+            
+            pstmt = con.prepareStatement(getCurrentRating);
+            pstmt.setInt(1, postID);
+            rs = pstmt.executeQuery();
+            
+            rs.next();
+            curRating = rs.getInt("postRating");
+            
+           
+ 
+        }   catch (SQLException e ) {
+                
+                System.out.println("execute delete post update error!");
+                System.out.print(e);
+         }  
+        
+         numRatings++;   
+         curRating+=rating;
+         int newRating = (int)(curRating/numRatings); 
+         
+         String updateRating = "UPDATE postindex SET postRating = ? WHERE postID = ?";
+         String updateNumRatings = "UPDATE postindex SET numberOfRatings = ? WHERE postID = ?";
+         
+         try { 
+             
+             stmt = con.createStatement();
+             pstmt = con.prepareStatement(updateRating);
+             pstmt.setInt(1, newRating);
+             pstmt.setInt(2, postID);
+             pstmt.executeUpdate();
+             
+             pstmt = con.prepareStatement(updateNumRatings);
+             pstmt.setInt(1, numRatings);
+             pstmt.setInt(2, postID);
+             pstmt.executeUpdate();
+             
+             
+             
+         } catch (SQLException e ) {
+                
+                System.out.println("execute delete post update error!");
+                System.out.print(e);
+         }    
+    }
 }
