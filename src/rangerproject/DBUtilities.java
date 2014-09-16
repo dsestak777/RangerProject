@@ -71,8 +71,8 @@ public class DBUtilities {
         boolean log = isUserLoggedIN("test2");
         System.out.println(log);
         
-        addPost("First Post", "test2", 1, "ALL YOUR BASE ARE BELONG TO US");
-        addPost("Second Post", "test1", 2, "THE RAIN IN SPAIN");
+     //   addPost("First Post", "test2", 1, "ALL YOUR BASE ARE BELONG TO US");
+     //   addPost("Second Post", "test1", 2, "THE RAIN IN SPAIN");
         
       //  topics = viewByUser("test2");
         
@@ -88,6 +88,7 @@ public class DBUtilities {
             System.out.println(topics.get(i).toString());
         }
         
+        deletePost(2,"test2","123");
         
     }
     
@@ -591,29 +592,55 @@ public class DBUtilities {
   }
 
     
-    public static void deletePost (int postNum, String userName ) {
+    public static void deletePost (int postNum, String userName, String userPassword ) {
     
+        boolean deleteOK = false;
+        
+        deleteOK = checkPassword(userName, userPassword);
+        
+        if (deleteOK) {
     
-        String delete = "DELETE * FROM postindex WHERE postID = ? AND postCreatorName = ?";
+        String tableName = "postreply"+postNum;    
+            
+        String deleteIndex = "DELETE FROM postindex WHERE postID = ? AND postCreatorName = ?";
+        String deletePost = "DROP TABLE "+tableName;
         
         try {
           
             stmt = con.createStatement();
-            pstmt = con.prepareStatement(delete);
+            pstmt = con.prepareStatement(deleteIndex);
             pstmt.setInt(1, postNum);
             pstmt.setString(2, userName);
             pstmt.executeUpdate();
             
             
+            
         }
         catch (SQLException e ) {
                 
-                System.out.println("execute delete update error!");
+                System.out.println("execute delete index update error!");
                 System.out.print(e);
-                
-                
          }
-    
+        
+         try {
+             
+             stmt = con.createStatement();
+             stmt.executeUpdate(deletePost);
+             
+         }  
+        catch (SQLException e ) {
+                
+                System.out.println("execute delete post update error!");
+                System.out.print(e);
+         }
+        
+        }
+        
+        else {
+            
+            System.out.println("incorrect user name or password");
+            
+        }
     }  
       
 }
