@@ -48,7 +48,7 @@ public class DBUtilities {
     private static PreparedStatement pstmt;
     private static ResultSet rs;
     private static CallableStatement ca;
-   
+    private static ArrayList<MessageTopic> topics = new ArrayList<>();
     
     
     
@@ -57,11 +57,14 @@ public class DBUtilities {
        // createDatabase();
         createTables();
         addUser("test2","123");
+        addUser("test1", "111");
+        
         boolean checkUser = doesUserExist ("test2");
         
         System.out.println("does user exist =" + checkUser);
         
         logINUser ("test2","123");
+        logINUser ("test1", "111");
        
         boolean password = checkPassword("test2","123");
         
@@ -69,6 +72,21 @@ public class DBUtilities {
         System.out.println(log);
         
         addPost("First Post", "test2", 1, "ALL YOUR BASE ARE BELONG TO US");
+        addPost("Second Post", "test1", 2, "THE RAIN IN SPAIN");
+        
+      //  topics = viewByUser("test2");
+        
+      //  for (int i = 0; i<topics.size(); i++) {
+            
+     //       System.out.println(topics.get(i).toString());
+     //   }
+        
+        topics = viewByTopic("First Post");
+        
+        for (int i = 0; i<topics.size(); i++) {
+            
+            System.out.println(topics.get(i).toString());
+        }
         
         
     }
@@ -116,66 +134,7 @@ public class DBUtilities {
 		return con;
 	}
 
-     public static void createStoredProcedures() {
-            
-            String dropString1 = "drop procedure find_years";
-            String dropString2 = "drop procedure game_results";
-            String dropString3 = "drop procedure add_team";
-            String dropString4 = "drop procedure find_team";
-            String dropString5 = "drop procedure add_game";
-            String createString1 = "create procedure find_years(team varchar(30)) SELECT yearGame FROM game JOIN team ON team.teamID=game.winTeam WHERE team.teamName = team";
-            String createString2 = "create procedure game_results(year1 int(11), year2 int(11)) SELECT teamName FROM team JOIN game ON game.winTeam=team.teamID WHERE game.yearGame = year1 UNION SELECT teamName FROM team JOIN game ON game.lossTeam=team.teamID WHERE game.yearGame = year2";
-            String createString3 = "create procedure add_team(newteam varchar(30), teamleague varchar(2)) INSERT INTO team (teamName, league) SELECT * FROM (SELECT newteam, teamleague) AS tmp WHERE NOT EXISTS (SELECT teamName FROM team WHERE teamName = newteam ) LIMIT 1";
-            String createString4 = "create procedure find_team(team varchar(30)) SELECT teamID FROM team WHERE team.teamName = team";
-            String createString5 = "create procedure add_game(yearPlay int(11), winner int(11), loser int(11)) INSERT INTO game (yearGame, winTeam, lossTeam) SELECT * FROM (SELECT yearPlay, winner, loser) AS tmp WHERE NOT EXISTS (SELECT yearGame FROM game WHERE yearGame = yearPlay ) LIMIT 1";
-            
-        // drop procedure if it exists    
-        try    
-	{
-                checkConnect();
-            
-		// the Statement object is what sends your SQL statement to the DBMS
-		stmt = con.createStatement();
-		// drop procedure if it exist.  If it do not, it will throw a SQLException
-		stmt.executeUpdate(dropString1);
-                stmt.executeUpdate(dropString2);
-                stmt.executeUpdate(dropString3);
-                stmt.executeUpdate(dropString4);
-                stmt.executeUpdate(dropString5);
-		
-		}
-	catch (SQLException e)
-	{
-		// catch that exception and do nothing
-		System.out.println("Stored procedure doesn't exist");				
-	}    
-        
-        
-        
-        // add procedure     
-            try
-                
-	{
-                checkConnect();
-            
-		System.out.println(createString1);
-		// now create the stored procedure
-		stmt.executeUpdate(createString1);
-                stmt.executeUpdate(createString2);
-                stmt.executeUpdate(createString3);
-                stmt.executeUpdate(createString4);
-                stmt.executeUpdate(createString5);
-		
-		System.out.println("Stored procedures created!!");
-	}
-	catch (SQLException e)
-	{
-		e.printStackTrace();
-		System.out.println("execute update error");				
-	}
-            
-            
-     }    
+     
     
      public static void createDatabase() {
          
@@ -531,7 +490,7 @@ public class DBUtilities {
         
         ArrayList<MessageTopic> messageIndex = new ArrayList<>();
         
-        String viewUser = "SELECT * FROM postindex WHERE userName = ?";
+        String viewUser = "SELECT * FROM postindex WHERE postCreatorName = ?";
         
         try {
             
@@ -549,8 +508,9 @@ public class DBUtilities {
                 String message = rs.getString("postMessage");
                 int rating = rs.getInt("postRating");
                 int noRate = rs.getInt("numberOfRatings");
-                String date = rs.getString("postDate");
-                Timestamp timestamp = rs.getTimestamp("MY_DATE");
+                Timestamp timestamp = rs.getTimestamp("postDate");
+           //     String date = rs.getString("postDate");
+           //     Timestamp timestamp = rs.getTimestamp(date);
          
              //   Date date = rs.getObject("postDate", Date.valueOf(LocalDate.MIN));
                 
@@ -565,7 +525,7 @@ public class DBUtilities {
         }
          catch (SQLException e ) {
                 
-                System.out.println("execute query error!");
+                System.out.println("execute view by user query error!");
                 System.out.print(e);
                 
                 
@@ -575,6 +535,53 @@ public class DBUtilities {
     }
     
     
+    public static ArrayList<MessageTopic> viewByTopic (String postTopic) {
+        
+        ArrayList<MessageTopic> messageIndex = new ArrayList<>();
+        
+        String viewUser = "SELECT * FROM postindex WHERE postTitle = ?";
+        
+        try {
+            
+            stmt = con.createStatement();
+            pstmt = con.prepareStatement(viewUser);
+            pstmt.setString(1, postTopic);
+            rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                
+                int postnum = rs.getInt("postID");
+                String title = rs.getString("postTitle");
+                String creator = rs.getString("postCreatorName");
+                int creatorID = rs.getInt("postCreatorID");
+                String message = rs.getString("postMessage");
+                int rating = rs.getInt("postRating");
+                int noRate = rs.getInt("numberOfRatings");
+                Timestamp timestamp = rs.getTimestamp("postDate");
+           //     String date = rs.getString("postDate");
+           //     Timestamp timestamp = rs.getTimestamp(date);
+         
+             //   Date date = rs.getObject("postDate", Date.valueOf(LocalDate.MIN));
+                
+                MessageTopic topic = new MessageTopic (postnum, title, creator, creatorID, message, rating, noRate, timestamp);
+                
+                messageIndex.add(topic);
+               
+                
+                
+            }
+            
+        }
+         catch (SQLException e ) {
+                
+                System.out.println("execute view by user query error!");
+                System.out.print(e);
+                
+                
+         }
+        
+        return messageIndex;
+    }
     
     public static java.sql.Date getCurrentJavaSqlDate() {
         
@@ -583,5 +590,30 @@ public class DBUtilities {
         return new java.sql.Date(today.getTime());
   }
 
+    
+    public static void deletePost (int postNum, String userName ) {
+    
+    
+        String delete = "DELETE * FROM postindex WHERE postID = ? AND postCreatorName = ?";
+        
+        try {
+          
+            stmt = con.createStatement();
+            pstmt = con.prepareStatement(delete);
+            pstmt.setInt(1, postNum);
+            pstmt.setString(2, userName);
+            pstmt.executeUpdate();
+            
+            
+        }
+        catch (SQLException e ) {
+                
+                System.out.println("execute delete update error!");
+                System.out.print(e);
+                
+                
+         }
+    
+    }  
       
 }
