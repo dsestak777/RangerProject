@@ -33,6 +33,7 @@ import java.util.StringTokenizer;
  */
 public class DBUtilities {
     
+    //list and initialize variables and arrays
     private static Connection con;
     private static Statement stmt;
     private static Scanner scan = new Scanner(System.in);
@@ -40,11 +41,6 @@ public class DBUtilities {
     private static String createUsersString;
     private static String createPostIndexString;
     private static String createPostReplyTable;
-    private static String createString1;
-    private static String createString2;
-    private static String dropString1;
-    private static String dropString2;
-    private static String alterString;
     private static PreparedStatement pstmt;
     private static ResultSet rs;
     private static CallableStatement ca;
@@ -110,11 +106,15 @@ public class DBUtilities {
         
     }
     
-    
+    //check if connection to database exists
     public static void checkConnect() {
-		if (con==null) {
+        
+		// if connection does not exist create one
+                if (con==null) {
+                    
 			con=createConnection();
 		}
+                //if statement does not exist create one 
 		if(stmt==null) {
 			try {
 				stmt = con.createStatement();
@@ -124,6 +124,7 @@ public class DBUtilities {
 		}
 	}
     
+    //close connection to database
     public static void closeConnection() {
 		if( con != null ) {
 			try { 
@@ -137,11 +138,17 @@ public class DBUtilities {
 	}
     
     public static Connection createConnection() {
+        
+        //user name and password
+        String user = "itp220";
+        String pass = "itp220";
+        
+        
 		try {	
-			System.out.println("What is the username for the database?");
-			String user = scan.nextLine();
-			System.out.println("What is the password?");
-			String pass = scan.nextLine();
+		//	System.out.println("What is the username for the database?");
+		//	String user = scan.nextLine();
+		//	System.out.println("What is the password?");
+		//	String pass = scan.nextLine();
 			con=  JDBCConnection.connect(JDBCConnection.MYSQLLOCAL,user,pass);
 		} catch (IllegalStateException e) {
         	// Scanner is closed. Open a new one.
@@ -154,7 +161,7 @@ public class DBUtilities {
 	}
 
      
-    
+    //create database method
      public static void createDatabase() {
          
          con = null;
@@ -177,13 +184,13 @@ public class DBUtilities {
   
      }
      
+     //create tables for database
      public static void createTables () {
+        
         con = null;
         stmt = null;
-        
-     //   dropString1 = "Drop table if exists game";
-     //   dropString2 = "Drop table if exists team";
-        
+       
+        //SQL string to create users table
         createUsersString = "CREATE TABLE IF NOT EXISTS users "
                 + "(userID int(11) NOT NULL AUTO_INCREMENT,"
                 + "userName varchar(30) NOT NULL,"
@@ -192,6 +199,7 @@ public class DBUtilities {
                 + "PRIMARY KEY (userID))"
                 + "ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1";
         
+        //SQL string to create postindex table
         createPostIndexString = "CREATE TABLE IF NOT EXISTS postindex "
                 + "(postID int(11) NOT NULL AUTO_INCREMENT,"
                 + "postTitle varchar(30) NOT NULL,"
@@ -211,14 +219,12 @@ public class DBUtilities {
                 + "(lossTeam) REFERENCES team (teamID),"
                 + "ADD CONSTRAINT winTeam FOREIGN KEY (`winTeam`) REFERENCES team (teamID)";
         **/
-        
-
-       
-        
+      
+        //try creating tables
         try {
             
             checkConnect();
-            // create the game and team tables
+            // create the user and postindex tables
             
             stmt.executeUpdate(createUsersString);
             stmt.executeUpdate(createPostIndexString);
@@ -235,12 +241,16 @@ public class DBUtilities {
  
     }
     
+     //method to check if a user is logged in
     public static boolean isUserLoggedIN (String name) {
         
+        //set logged in as falsee
         boolean loggedIN = false;
         
+        //SQL string to check log in status for user
         String checkLogIN = "SELECT (userLoggedIN) FROM users WHERE userName = ?";
         
+        //try querying database
         try {
             
             stmt = con.createStatement();
@@ -250,6 +260,7 @@ public class DBUtilities {
             
             rs.next();
             
+            //get loggedIN variable from database for this user
             loggedIN = rs.getBoolean("userLoggedIN");
             
         }
@@ -263,24 +274,31 @@ public class DBUtilities {
         return loggedIN;
     } 
      
+    
+    //method to check if a user already exists in the database
     public static boolean doesUserExist(String name) {
         
+        //set user found to false
         boolean userFound = false;
         
+        //SQL string to check if user name exists
         String doesUserExist = "SELECT * FROM users WHERE userName = ?";
         
+        //try to query database for user name
         try {
             
             stmt = con.createStatement();
             pstmt = con.prepareStatement(doesUserExist);
             pstmt.setString(1, name);
             rs = pstmt.executeQuery();
-            //rs.next();
             
+            
+            //if name found set to true
             if (rs.next()) {
                 
                 userFound = true;
                 
+            //if not found set to false    
             } else {
                 
                 userFound = false;
@@ -294,16 +312,19 @@ public class DBUtilities {
             
         }
         
+        //return results of query
         return userFound;
     }
     
+    //method used to add new user
     public static void addUser(String name, String password) {
         
-        
+        //SQL string to add new user into users database (also checks for duplicates)
         String addUserString =  "INSERT INTO users (userName, userPassword) SELECT * FROM (SELECT ?, ?) AS tmp WHERE NOT EXISTS (SELECT userName FROM users WHERE userName = ? ) LIMIT 1";
        
     //    String addUserString = "INSERT INTO users (userName, userPassword) VALUES (? , ?)";
         
+        //try to add new user to database
         try {
             
             stmt = con.createStatement();
@@ -329,12 +350,16 @@ public class DBUtilities {
         
     } 
     
+    //method used to check if password entered is correct
     public static boolean checkPassword (String name, String password) {
         
+        //set pass word correct to false
         boolean passwordOK = false;
         
+        //SQL string to check to get password for user name
         String check = "SELECT userPassword FROM users WHERE userName = ?";
         
+        //try to get password based on user name
         try {
             
             stmt = con.createStatement();
@@ -344,13 +369,16 @@ public class DBUtilities {
             
             rs.next();
             
+            //assign password to string
             String realPass = rs.getString("userPassword");
             
+            //if password matches set to true
              if (realPass.equals(password)) {
                 
                 System.out.println("password is correct!"); 
                 passwordOK = true;
-             
+            
+            //if password does not match set to false    
             } else {
                  
                 System.out.println("password is incorrect!");
@@ -364,24 +392,31 @@ public class DBUtilities {
             System.out.print(e);
         }
         
+        //return results of query 
         return passwordOK;
     }
     
-    
+    //method used to log in a user
     public static void logINUser (String name, String password) {
         
+        //check if password is correct
         boolean checkPass = checkPassword (name, password);
         
         System.out.println("checkpass =" + checkPass);
      //   System.out.println(name);
         
+        //if password is incorrect return
         if (checkPass == false) {
      
             return;
         }
+        //if password is correct log user in 
         else { 
+            
+            //SQL string to set logged in to true
             String login = "UPDATE users SET userLoggedIN = 1 WHERE userName = ?";
         
+            //try to update table 
             try {
                 stmt = con.createStatement();
                 pstmt = con.prepareStatement(login);
@@ -401,12 +436,16 @@ public class DBUtilities {
         }
     }
     
+    //method used to log out a user
     public static void logOutUser (String user) {
         
+          //assume no password is required to log out a user
      //   boolean checkPass = checkPassword (name, password);
-              
+            
+            //SQL string to change logged in to false
             String logout = "UPDATE users SET userLoggedIN = 0 WHERE userName = ?";
         
+            //try to update logged in variablee for user
             try {
                 stmt = con.createStatement();
                 pstmt = con.prepareStatement(logout);
@@ -425,15 +464,16 @@ public class DBUtilities {
           
     }
     
+    //method used to add a new Post to the database
     public static void addPost (String title, String userName, int userID, String message) {
         
-       // java.util.Date today = Calendar.getInstance().getTime();
-      //  Date date = new Date(00-00-0000);
-      //  java.util.Date now = new java.util.Date();
-         java.sql.Date date = getCurrentJavaSqlDate();
+        //get the current data 
+        java.sql.Date date = getCurrentJavaSqlDate();
         
+        //check if the user is logged in
         Boolean log = isUserLoggedIN(userName);
         
+        //if not logged in disregard
         if (log == false ) {
             
             // user not logged in
@@ -441,10 +481,13 @@ public class DBUtilities {
             
             return;
             
+        //if user is logged in add new post     
         } else {
-        
+            
+            //try to add new post to postindex
             try { 
             
+                //SQL string to add new post to postindex
                 String addNewPost = "INSERT INTO postindex (postTitle, postCreatorName, postCreatorID, postMessage, postDate) VALUES (?,?,?,?,?)";
         
                 stmt = con.createStatement();
@@ -468,6 +511,7 @@ public class DBUtilities {
                 
             }
             
+            //SQL string to get id of last inserted record (postID)
             String getPostID = "SELECT LAST_INSERT_ID()"; 
             
             try {
@@ -477,10 +521,12 @@ public class DBUtilities {
                 rs = pstmt.executeQuery();
                 rs.next();
                 
+                //assign last id to postID for new table creation
                 int postNum = rs.getInt("last_insert_id()");
                 
                 System.out.println("post# =" + postNum);
                 
+                //create a seperate table for this post to hold replies
                 createReplyTable(postNum);
             }
             catch (SQLException e ) {
@@ -495,27 +541,33 @@ public class DBUtilities {
         }
     }
     
+    //metrhod used to add replies to a message post
      public static void addReply (int postID, String title, String message, String userName) {
         
-       // java.util.Date today = Calendar.getInstance().getTime();
-      //  Date date = new Date(00-00-0000);
-      //  java.util.Date now = new java.util.Date();
-         java.sql.Date date = getCurrentJavaSqlDate();
+        // get the current data
+        java.sql.Date date = getCurrentJavaSqlDate();
         
+        //check if the user is logged in 
         Boolean log = isUserLoggedIN(userName);
         
+        //if the user is not logged in then return
         if (log == false ) {
             
             // user not logged in
             System.out.println("User not logged in!!");
             
             return;
-            
+        
+        //if the user is logged in then add the reply    
         } else {
         
-            try { 
             
+            try { 
+                
+                //use postID to get name of new reply table
                 String table = "postreply"+postID;
+                
+                 //SQL string to insert new reply into table 
                 String addNewPost = "INSERT INTO " +table+ " (replyTitle, replyMessage, replyCreator, replyDate) VALUES (?,?,?,?)";
         
                 stmt = con.createStatement();
@@ -542,11 +594,13 @@ public class DBUtilities {
         }
     }
     
+     //method used to create a reply table for each new post
     public static void createReplyTable (int postNum) {
         
-        
+         //create table name based upon postID
          String tableName = "postreply"+postNum;
         
+         //SQL string to create a new reply table
          createPostReplyTable = "CREATE TABLE IF NOT EXISTS "+ tableName+" "
                 + "(replyID int(11) NOT NULL AUTO_INCREMENT,"
                 + "replyTitle varchar(30) NOT NULL," 
@@ -575,12 +629,16 @@ public class DBUtilities {
       
     }
     
+    //method to view all posts by a specific user
     public static ArrayList<MessageTopic> viewByUser (String user) {
         
+        //initialize arraylist to hold topics
         ArrayList<MessageTopic> messageIndex = new ArrayList<>();
         
+        //SQL string to get all posts for a user from postindex table
         String viewUser = "SELECT * FROM postindex WHERE postCreatorName = ?";
         
+        //try to query databased 
         try {
             
             stmt = con.createStatement();
@@ -588,6 +646,7 @@ public class DBUtilities {
             pstmt.setString(1, user);
             rs = pstmt.executeQuery();
             
+            //while we have results get data from each line
             while (rs.next()) {
                 
                 int postnum = rs.getInt("postID");
@@ -598,13 +657,13 @@ public class DBUtilities {
                 int rating = rs.getInt("postRating");
                 int noRate = rs.getInt("numberOfRatings");
                 Timestamp timestamp = rs.getTimestamp("postDate");
-           //     String date = rs.getString("postDate");
-           //     Timestamp timestamp = rs.getTimestamp(date);
          
              //   Date date = rs.getObject("postDate", Date.valueOf(LocalDate.MIN));
                 
+                //create a messagetopic object
                 MessageTopic topic = new MessageTopic (postnum, title, creator, creatorID, message, rating, noRate, timestamp);
                 
+                //add new object to arraylist
                 messageIndex.add(topic);
                
                 
@@ -619,17 +678,21 @@ public class DBUtilities {
                 
                 
          }
-        
+        //return arraylist of message topics
         return messageIndex;
     }
     
     
+    //method used to get all message posts by a certain topic
     public static ArrayList<MessageTopic> viewByTopic (String postTopic) {
         
+        //initialize arraylist to hold message topics
         ArrayList<MessageTopic> messageIndex = new ArrayList<>();
         
+        //SQL string to get all matching topics by title
         String viewUser = "SELECT * FROM postindex WHERE postTitle = ?";
         
+        //try to query database 
         try {
             
             stmt = con.createStatement();
@@ -637,6 +700,7 @@ public class DBUtilities {
             pstmt.setString(1, postTopic);
             rs = pstmt.executeQuery();
             
+            //while we have reulsts assign data to variables
             while (rs.next()) {
                 
                 int postnum = rs.getInt("postID");
@@ -647,13 +711,13 @@ public class DBUtilities {
                 int rating = rs.getInt("postRating");
                 int noRate = rs.getInt("numberOfRatings");
                 Timestamp timestamp = rs.getTimestamp("postDate");
-           //     String date = rs.getString("postDate");
-           //     Timestamp timestamp = rs.getTimestamp(date);
          
              //   Date date = rs.getObject("postDate", Date.valueOf(LocalDate.MIN));
                 
+                //create new messagetopic object
                 MessageTopic topic = new MessageTopic (postnum, title, creator, creatorID, message, rating, noRate, timestamp);
                 
+                //add object to arraylist
                 messageIndex.add(topic);
         
             }
@@ -665,22 +729,27 @@ public class DBUtilities {
                 System.out.print(e);
                 
          }
-        
+        //return arraylist 
         return messageIndex;
     }
     
+    //method used to view all message posts created by date
     public static ArrayList<MessageTopic> viewByDate () {
         
+        //initialize arraylist to hold message topics
         ArrayList<MessageTopic> messageIndex = new ArrayList<>();
         
+        //SQL string to find all posts by date in descending order 
         String viewByDate = "SELECT * FROM postindex ORDER BY postDate DESC";
         
+        //try to query the database 
         try {
             
             stmt = con.createStatement();
             pstmt = con.prepareStatement(viewByDate);
             rs = pstmt.executeQuery();
             
+            //while we have results assign them to variables
             while (rs.next()) {
                 
                 int postnum = rs.getInt("postID");
@@ -691,13 +760,13 @@ public class DBUtilities {
                 int rating = rs.getInt("postRating");
                 int noRate = rs.getInt("numberOfRatings");
                 Timestamp timestamp = rs.getTimestamp("postDate");
-           //     String date = rs.getString("postDate");
-           //     Timestamp timestamp = rs.getTimestamp(date);
          
              //   Date date = rs.getObject("postDate", Date.valueOf(LocalDate.MIN));
                 
+                //create a new messagetopic object
                 MessageTopic topic = new MessageTopic (postnum, title, creator, creatorID, message, rating, noRate, timestamp);
                 
+                //add new object to arraylist
                 messageIndex.add(topic);
         
             }
@@ -710,9 +779,11 @@ public class DBUtilities {
                 
          }
         
+        //return arraylist of message topics
         return messageIndex;
     }
     
+    //method used to get SQL format date 
     public static java.sql.Date getCurrentJavaSqlDate() {
         
         java.util.Date today = new java.util.Date();
@@ -720,20 +791,28 @@ public class DBUtilities {
         return new java.sql.Date(today.getTime());
   }
 
-    
+    //method used to delete a message post 
     public static void deletePost (int postNum, String userName, String userPassword ) {
     
+        //set delete OK to false
         boolean deleteOK = false;
         
+        //check user  password to see if correct
         deleteOK = checkPassword(userName, userPassword);
         
+        //if password correct proceeed 
         if (deleteOK) {
     
+        //get table name based upon postID    
         String tableName = "postreply"+postNum;    
-            
+        
+        //SQL string to delete topic from postindex
         String deleteIndex = "DELETE FROM postindex WHERE postID = ? AND postCreatorName = ?";
+        
+        //SQL string to drop reply table associated with postID
         String deletePost = "DROP TABLE "+tableName;
         
+        //try to delete the topic from postindex
         try {
           
             stmt = con.createStatement();
@@ -751,6 +830,7 @@ public class DBUtilities {
                 System.out.print(e);
          }
         
+         //try to delete the reply table
          try {
              
              stmt = con.createStatement();
@@ -772,8 +852,10 @@ public class DBUtilities {
         }
     }  
     
+    //methode used to view a specific message and all replies
     public static ArrayList<MessagePost> viewChosenPost (int postID) {
         
+        //list all local variables 
         ArrayList<MessagePost> messagePost = new ArrayList<>();
         int postnum;
         String title;
@@ -782,16 +864,22 @@ public class DBUtilities {
         Timestamp timestamp;
         MessagePost post;
   
+        //SQL string to get the message from postindex table
         String getTopic = "SELECT * FROM postindex WHERE postID = ?";
+        
+        //SQL string to get all data from associated reply table
         String viewPost = "SELECT * FROM postreply"+postID;
         
+        //try to get topic from postindex and postreply tables
         try {
             
             stmt = con.createStatement();
             pstmt = con.prepareStatement(getTopic);
             pstmt.setInt(1, postID);
             rs = pstmt.executeQuery();
-            rs.next();
+            
+            //while there is results get the data 
+            while (rs.next()) {
             
                 postnum = rs.getInt("postID");
                 title = rs.getString("postTitle");
@@ -799,17 +887,19 @@ public class DBUtilities {
                 message = rs.getString("postMessage");
                 timestamp = rs.getTimestamp("postDate");
                 
+                //create a new messagepost object
                 post = new MessagePost (postnum, title, creator, message, timestamp);
                 
+                //add new object to arraylist
                 messagePost.add(post);
-                
+            }   
                 
             stmt = con.createStatement();
             pstmt = con.prepareStatement(viewPost);
             rs = pstmt.executeQuery();
             
             
-            
+            //while there is results get the data 
             while (rs.next()) {
                 
                 postnum = rs.getInt("replyID");
@@ -818,8 +908,10 @@ public class DBUtilities {
                 creator = rs.getString("replyCreator");
                 timestamp = rs.getTimestamp("replyDate");
                 
+                //create a new messagepost object
                 post = new MessagePost (postnum, title, creator, message, timestamp);
                 
+                //add new object to the arraylist
                 messagePost.add(post);
                 
             }
@@ -833,34 +925,41 @@ public class DBUtilities {
                 
          }
         
+        //return array of messagepost
         return messagePost;
     }
     
-    
+    //method used to rate a post
     public static void ratePost (int rating, int postID) {
         
+        //initialize local variables
         int curRating = 0;
         int numRatings = 0;
-                
+        
+        //SQL string to get # of ratings 
         String getNumRatings = "SELECT numberOfRatings FROM postindex WHERE postID = ?";
+        
+        //SQL string to get current rating
         String getCurrentRating = "SELECT postRating FROM postindex WHERE postID = ?";        
      
+        //try to query database table for rating and # of ratings
         try{ 
             stmt = con.createStatement();
             pstmt = con.prepareStatement(getNumRatings);
             pstmt.setInt(1, postID);
             rs = pstmt.executeQuery();
             
-            rs.next();
+            while(rs.next()) {
             numRatings = rs.getInt("numberOfRatings");
+            }
             
             pstmt = con.prepareStatement(getCurrentRating);
             pstmt.setInt(1, postID);
             rs = pstmt.executeQuery();
             
-            rs.next();
+            while(rs.next()) {
             curRating = rs.getInt("postRating");
-            
+            }
            
  
         }   catch (SQLException e ) {
@@ -869,21 +968,35 @@ public class DBUtilities {
                 System.out.print(e);
          }  
         
-         numRatings++;   
-         curRating+=rating;
-         int newRating = (int)(curRating/numRatings); 
+         //calculate grand total
+         double grandtotal = curRating * numRatings; 
+        
+        //increase #ratings by 1
+         numRatings++;
          
+         //add current rating to existing 
+         grandtotal+=rating;
+         
+         //calculate new rating 
+         int newRating = (int)(grandtotal/numRatings); 
+         
+         //SQL string to update post rating
          String updateRating = "UPDATE postindex SET postRating = ? WHERE postID = ?";
+         
+         //SQL string to update # of ratings
          String updateNumRatings = "UPDATE postindex SET numberOfRatings = ? WHERE postID = ?";
          
+         //try to update database table
          try { 
              
+             //update rating 
              stmt = con.createStatement();
              pstmt = con.prepareStatement(updateRating);
              pstmt.setInt(1, newRating);
              pstmt.setInt(2, postID);
              pstmt.executeUpdate();
              
+             //update # of ratings
              pstmt = con.prepareStatement(updateNumRatings);
              pstmt.setInt(1, numRatings);
              pstmt.setInt(2, postID);
