@@ -71,8 +71,10 @@ public class DBUtilities {
         boolean log = isUserLoggedIN("test2");
         System.out.println(log);
         
-     //   addPost("First Post", "test2", 1, "ALL YOUR BASE ARE BELONG TO US");
-     //   addPost("Second Post", "test1", 2, "THE RAIN IN SPAIN");
+    //    addPost("Firsdt Post", "test2", 1, "ALL YOUR BASE ARE BELONG TO US");
+    //    addPost("Second Post", "test1", 2, "THE RAIN IN SPAIN");
+    //    addPost("Third Post", "test2", 1, "TO INFINITY AND BEYOND");
+    //    addPost("Fourth Post", "test1", 2, "WHAT ME WHY WORRY");
         
       //  topics = viewByUser("test2");
         
@@ -81,14 +83,19 @@ public class DBUtilities {
      //       System.out.println(topics.get(i).toString());
      //   }
         
-        topics = viewByTopic("First Post");
+        topics = viewByDate();
         
         for (int i = 0; i<topics.size(); i++) {
             
             System.out.println(topics.get(i).toString());
         }
         
-        deletePost(2,"test2","123");
+        deletePost(1,"test2","123");
+        
+    //    addReply(1, "Reply Title", "Reply Message", "test2");
+   //      addReply(1, "Reply Title2", "Reply Message2", "test2");
+        
+        logOutUser("test2");
         
     }
     
@@ -386,6 +393,30 @@ public class DBUtilities {
         }
     }
     
+    public static void logOutUser (String user) {
+        
+     //   boolean checkPass = checkPassword (name, password);
+              
+            String logout = "UPDATE users SET userLoggedIN = 0 WHERE userName = ?";
+        
+            try {
+                stmt = con.createStatement();
+                pstmt = con.prepareStatement(logout);
+             //   pstmt.setInt(1, 1);
+                pstmt.setString(1, user);
+                pstmt.executeUpdate();
+        
+            System.out.println("User is now logged out!");
+        
+            }
+            catch (SQLException e) {
+            
+                System.out.println("execute logout error!");
+                System.out.print(e);
+            }
+          
+    }
+    
     public static void addPost (String title, String userName, int userID, String message) {
         
        // java.util.Date today = Calendar.getInstance().getTime();
@@ -456,17 +487,66 @@ public class DBUtilities {
         }
     }
     
+     public static void addReply (int postID, String title, String message, String userName) {
+        
+       // java.util.Date today = Calendar.getInstance().getTime();
+      //  Date date = new Date(00-00-0000);
+      //  java.util.Date now = new java.util.Date();
+         java.sql.Date date = getCurrentJavaSqlDate();
+        
+        Boolean log = isUserLoggedIN(userName);
+        
+        if (log == false ) {
+            
+            // user not logged in
+            System.out.println("User not logged in!!");
+            
+            return;
+            
+        } else {
+        
+            try { 
+            
+                String table = "postreply"+postID;
+                String addNewPost = "INSERT INTO " +table+ " (replyTitle, replyMessage, replyCreator, replyDate) VALUES (?,?,?,?)";
+        
+                stmt = con.createStatement();
+                pstmt = con.prepareStatement(addNewPost);
+                pstmt.setString(1, title);
+                pstmt.setString(2, message);
+                pstmt.setString(3, userName);
+             //   pstmt.setDate(5,date.valueOf("1998-1-17"));
+                pstmt.setDate(4,date);
+                pstmt.executeUpdate();
+                
+                System.out.println("New Reply Added!");
+                
+            }
+            catch (SQLException e ) {
+                
+                System.out.println("execute add reply update error!");
+                System.out.print(e);
+                
+                
+            }
+            
+            
+        }
+    }
+    
     public static void createReplyTable (int postNum) {
         
         
          String tableName = "postreply"+postNum;
         
          createPostReplyTable = "CREATE TABLE IF NOT EXISTS "+ tableName+" "
-                + "(postID int(11) NOT NULL,"
+                + "(replyID int(11) NOT NULL AUTO_INCREMENT,"
+                + "replyTitle varchar(30) NOT NULL," 
                 + "replyMessage varchar(300) NOT NULL,"
                 + "replyCreator varchar(30) NOT NULL,"
-                + "PRIMARY KEY (postID))"
-                + "ENGINE=InnoDB DEFAULT CHARSET=latin1";
+                + "replyDate date NOT NULL," 
+                + "PRIMARY KEY (replyID))"
+                + "ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1";
          
          try {
              
@@ -567,9 +647,7 @@ public class DBUtilities {
                 MessageTopic topic = new MessageTopic (postnum, title, creator, creatorID, message, rating, noRate, timestamp);
                 
                 messageIndex.add(topic);
-               
-                
-                
+        
             }
             
         }
@@ -578,6 +656,49 @@ public class DBUtilities {
                 System.out.println("execute view by user query error!");
                 System.out.print(e);
                 
+         }
+        
+        return messageIndex;
+    }
+    
+    public static ArrayList<MessageTopic> viewByDate () {
+        
+        ArrayList<MessageTopic> messageIndex = new ArrayList<>();
+        
+        String viewByDate = "SELECT * FROM postindex ORDER BY postDate DESC";
+        
+        try {
+            
+            stmt = con.createStatement();
+            pstmt = con.prepareStatement(viewByDate);
+            rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                
+                int postnum = rs.getInt("postID");
+                String title = rs.getString("postTitle");
+                String creator = rs.getString("postCreatorName");
+                int creatorID = rs.getInt("postCreatorID");
+                String message = rs.getString("postMessage");
+                int rating = rs.getInt("postRating");
+                int noRate = rs.getInt("numberOfRatings");
+                Timestamp timestamp = rs.getTimestamp("postDate");
+           //     String date = rs.getString("postDate");
+           //     Timestamp timestamp = rs.getTimestamp(date);
+         
+             //   Date date = rs.getObject("postDate", Date.valueOf(LocalDate.MIN));
+                
+                MessageTopic topic = new MessageTopic (postnum, title, creator, creatorID, message, rating, noRate, timestamp);
+                
+                messageIndex.add(topic);
+        
+            }
+            
+        }
+         catch (SQLException e ) {
+                
+                System.out.println("execute view by user query error!");
+                System.out.print(e);
                 
          }
         
