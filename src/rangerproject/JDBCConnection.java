@@ -187,8 +187,11 @@ public  static String getDriver(int num) {
 	
 	if (num==SQLSERVER)
 	{
-		System.out.println("What is the name of the database?(Type default if you want to use your default one)");
-		String name= scan.nextLine();
+	    	System.out.println("What is the name of the database?(Type default if you want to use your default one)");
+	    	String name= scan.nextLine();
+            
+               
+                
 		if (name.equals("default"))
 			return 	"jdbc:sqlserver://164.106.3.23:9012";
 		else
@@ -197,14 +200,20 @@ public  static String getDriver(int num) {
 	}
 	else if (num==ACCESS)
 	{
-		 System.out.println("What is the name of the ODBC connection?");
-		 String name= scan.nextLine();
+		System.out.println("What is the name of the ODBC connection?");
+		String name= scan.nextLine();
+                
+              
+                 
 		return "jdbc:odbc:" + name;
 	}	
 	else if (num==MYSQLLOCAL)
 	{
-		System.out.println("What is the name of the database?");
-		String name= scan.nextLine();
+		//System.out.println("What is the name of the database?");
+		//String name= scan.nextLine();
+                
+                  String name = "messageboard";
+                
 		return "jdbc:mysql://localhost:3306/"+name;
 	}
 	else if (num==MYSQLREMOTE)
