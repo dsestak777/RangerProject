@@ -68,10 +68,11 @@ public class DBUtilities {
         boolean log = isUserLoggedIN("test2");
         System.out.println(log);
         
-    //    addPost("Firsdt Post", "test2", 1, "ALL YOUR BASE ARE BELONG TO US");
+    //    addPost("First Post", "test2", 1, "ALL YOUR BASE ARE BELONG TO US");
     //    addPost("Second Post", "test1", 2, "THE RAIN IN SPAIN");
     //    addPost("Third Post", "test2", 1, "TO INFINITY AND BEYOND");
     //    addPost("Fourth Post", "test1", 2, "WHAT ME WHY WORRY");
+    //     addPost("Fifth Post", "test2", 2, "GIVE ME FIVE");
         
       //  topics = viewByUser("test2");
         
@@ -81,7 +82,7 @@ public class DBUtilities {
      //   }
         
         
-        ratePost(10,2);
+        ratePost(10,3);
         
         topics = viewByDate();
         
@@ -90,12 +91,15 @@ public class DBUtilities {
             System.out.println(topics.get(i).toString());
         }
         
-    //    deletePost(1,"test2","123");
+     //   addReply(3, "Reply Title", "Reply Message", "test2");
+     //   addReply(3, "Reply Title2", "Reply Message2", "test2");
+        
+     //   deletePost(2,"test2","123");
         
     //    addReply(2, "Reply Title", "Reply Message", "test2");
     //    addReply(2, "Reply Title2", "Reply Message2", "test2");
         
-        post = viewChosenPost(2);
+        post = viewChosenPost(3);
         
          for (int i = 0; i<post.size(); i++) {
             
@@ -212,8 +216,6 @@ public class DBUtilities {
                 + "PRIMARY KEY (postID))"
                 + "ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1";
         
-        
-      
         /**
         alterString = "ALTER TABLE game ADD CONSTRAINT lossTeam FOREIGN KEY"
                 + "(lossTeam) REFERENCES team (teamID),"
@@ -253,15 +255,16 @@ public class DBUtilities {
         //try querying database
         try {
             
-            stmt = con.createStatement();
+            checkConnect();
             pstmt = con.prepareStatement(checkLogIN);
             pstmt.setString(1, name);
             rs = pstmt.executeQuery();
             
-            rs.next();
+            if(rs.next()) {
             
             //get loggedIN variable from database for this user
             loggedIN = rs.getBoolean("userLoggedIN");
+            }
             
         }
         catch (SQLException e) {
@@ -287,7 +290,7 @@ public class DBUtilities {
         //try to query database for user name
         try {
             
-            stmt = con.createStatement();
+            checkConnect();
             pstmt = con.prepareStatement(doesUserExist);
             pstmt.setString(1, name);
             rs = pstmt.executeQuery();
@@ -327,7 +330,7 @@ public class DBUtilities {
         //try to add new user to database
         try {
             
-            stmt = con.createStatement();
+            checkConnect();
             pstmt = con.prepareStatement(addUserString);
             pstmt.setString(1, name);
             pstmt.setString(2, password);
@@ -353,6 +356,9 @@ public class DBUtilities {
     //method used to check if password entered is correct
     public static boolean checkPassword (String name, String password) {
         
+        //list and initialize local variables
+        String realPass=null;
+        
         //set pass word correct to false
         boolean passwordOK = false;
         
@@ -362,16 +368,17 @@ public class DBUtilities {
         //try to get password based on user name
         try {
             
-            stmt = con.createStatement();
+            checkConnect();
             pstmt = con.prepareStatement(check);
             pstmt.setString(1, name);
             rs = pstmt.executeQuery();
             
-            rs.next();
+           if(rs.next()) {
             
             //assign password to string
-            String realPass = rs.getString("userPassword");
-            
+            realPass = rs.getString("userPassword");
+           
+           }
             //if password matches set to true
              if (realPass.equals(password)) {
                 
@@ -418,7 +425,8 @@ public class DBUtilities {
         
             //try to update table 
             try {
-                stmt = con.createStatement();
+                
+                checkConnect();
                 pstmt = con.prepareStatement(login);
              //   pstmt.setInt(1, 1);
                 pstmt.setString(1, name);
@@ -447,7 +455,7 @@ public class DBUtilities {
         
             //try to update logged in variablee for user
             try {
-                stmt = con.createStatement();
+                checkConnect();
                 pstmt = con.prepareStatement(logout);
              //   pstmt.setInt(1, 1);
                 pstmt.setString(1, user);
@@ -473,6 +481,9 @@ public class DBUtilities {
         //check if the user is logged in
         Boolean log = isUserLoggedIN(userName);
         
+        //list & initializ local variable
+        int postNum = 0;
+        
         //if not logged in disregard
         if (log == false ) {
             
@@ -490,7 +501,7 @@ public class DBUtilities {
                 //SQL string to add new post to postindex
                 String addNewPost = "INSERT INTO postindex (postTitle, postCreatorName, postCreatorID, postMessage, postDate) VALUES (?,?,?,?,?)";
         
-                stmt = con.createStatement();
+                checkConnect();
                 pstmt = con.prepareStatement(addNewPost);
                 pstmt.setString(1, title);
                 pstmt.setString(2, userName);
@@ -513,16 +524,20 @@ public class DBUtilities {
             
             //SQL string to get id of last inserted record (postID)
             String getPostID = "SELECT LAST_INSERT_ID()"; 
-            
+         
             try {
                 
-                stmt = con.createStatement();
+                checkConnect();
                 pstmt = con.prepareStatement(getPostID);
                 rs = pstmt.executeQuery();
-                rs.next();
+               
+                
+                if(rs.next()) {
                 
                 //assign last id to postID for new table creation
-                int postNum = rs.getInt("last_insert_id()");
+                postNum = rs.getInt("last_insert_id()");
+                
+                }
                 
                 System.out.println("post# =" + postNum);
                 
@@ -570,7 +585,7 @@ public class DBUtilities {
                  //SQL string to insert new reply into table 
                 String addNewPost = "INSERT INTO " +table+ " (replyTitle, replyMessage, replyCreator, replyDate) VALUES (?,?,?,?)";
         
-                stmt = con.createStatement();
+                checkConnect();
                 pstmt = con.prepareStatement(addNewPost);
                 pstmt.setString(1, title);
                 pstmt.setString(2, message);
@@ -612,7 +627,7 @@ public class DBUtilities {
          
          try {
              
-             stmt = con.createStatement();
+             checkConnect();
              pstmt = con.prepareStatement(createPostReplyTable);
            //  pstmt.setString(1, tableName);
              pstmt.executeUpdate();
@@ -641,7 +656,7 @@ public class DBUtilities {
         //try to query databased 
         try {
             
-            stmt = con.createStatement();
+            checkConnect();
             pstmt = con.prepareStatement(viewUser);
             pstmt.setString(1, user);
             rs = pstmt.executeQuery();
@@ -695,7 +710,7 @@ public class DBUtilities {
         //try to query database 
         try {
             
-            stmt = con.createStatement();
+            checkConnect();
             pstmt = con.prepareStatement(viewUser);
             pstmt.setString(1, postTopic);
             rs = pstmt.executeQuery();
@@ -745,7 +760,7 @@ public class DBUtilities {
         //try to query the database 
         try {
             
-            stmt = con.createStatement();
+            checkConnect();
             pstmt = con.prepareStatement(viewByDate);
             rs = pstmt.executeQuery();
             
@@ -815,7 +830,7 @@ public class DBUtilities {
         //try to delete the topic from postindex
         try {
           
-            stmt = con.createStatement();
+            checkConnect();
             pstmt = con.prepareStatement(deleteIndex);
             pstmt.setInt(1, postNum);
             pstmt.setString(2, userName);
@@ -873,7 +888,7 @@ public class DBUtilities {
         //try to get topic from postindex and postreply tables
         try {
             
-            stmt = con.createStatement();
+            checkConnect();
             pstmt = con.prepareStatement(getTopic);
             pstmt.setInt(1, postID);
             rs = pstmt.executeQuery();
@@ -894,7 +909,7 @@ public class DBUtilities {
                 messagePost.add(post);
             }   
                 
-            stmt = con.createStatement();
+            checkConnect();
             pstmt = con.prepareStatement(viewPost);
             rs = pstmt.executeQuery();
             
@@ -944,12 +959,13 @@ public class DBUtilities {
      
         //try to query database table for rating and # of ratings
         try{ 
-            stmt = con.createStatement();
+            
+            checkConnect();
             pstmt = con.prepareStatement(getNumRatings);
             pstmt.setInt(1, postID);
             rs = pstmt.executeQuery();
             
-            while(rs.next()) {
+            if(rs.next()) {
             numRatings = rs.getInt("numberOfRatings");
             }
             
@@ -957,7 +973,7 @@ public class DBUtilities {
             pstmt.setInt(1, postID);
             rs = pstmt.executeQuery();
             
-            while(rs.next()) {
+            if(rs.next()) {
             curRating = rs.getInt("postRating");
             }
            
@@ -990,7 +1006,7 @@ public class DBUtilities {
          try { 
              
              //update rating 
-             stmt = con.createStatement();
+             checkConnect();
              pstmt = con.prepareStatement(updateRating);
              pstmt.setInt(1, newRating);
              pstmt.setInt(2, postID);
