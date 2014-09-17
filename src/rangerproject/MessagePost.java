@@ -5,6 +5,8 @@
  */
 package rangerproject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -13,16 +15,19 @@ import java.util.Date;
  */
 public class MessagePost {
  
+    //list instance variables
     private int postID;
     private String replyTitle;
     private String replyCreator;
     private String replyMessage;
     private Date replyDate;
  
+    //no argument contructor
     public MessagePost () {
         
     }
     
+    //full constructor
     public MessagePost (int postID, String replyTitle, String replyCreator, 
             String replyMessage, Date replyDate) {
         
@@ -33,14 +38,19 @@ public class MessagePost {
         this.replyDate = replyDate;
         
     }
-            
+    
+    //output data to String 
     public String toString () {
         
-        return "PostID = " + postID + "Title = " + replyTitle + " creator = " + replyCreator + " Message = "
-                + replyMessage + " date = " + replyDate;
+        DateFormat dateFormat = new SimpleDateFormat("MMMM dd yyyy");
+        java.util.Date date = new java.util.Date();
+        
+        return "PostID = " + postID + " Title = " + replyTitle + " creator = " + replyCreator + " Message = "
+                + replyMessage + " date = " + dateFormat.format(replyDate);
                 
     }
 
+    //getters and setters
     public int getPostID() {
         return postID;
     }
