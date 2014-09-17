@@ -5,6 +5,9 @@
  */
 package rangerproject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -13,6 +16,7 @@ import java.util.Date;
  */
 public class MessageTopic {
     
+    //list instance variables
     private int postID;
     private String postTitle;
     private String postCreator;
@@ -21,12 +25,14 @@ public class MessageTopic {
     private int postRating;
     private int noRatings;
     private Date postDate;
+   
     
-    
+    //no argument constructor
     public MessageTopic () {
         
     }
     
+    //full constructor
     public MessageTopic (int postID, String postTitle, String postCreator, int postCreatorID, 
             String postMessage, int postRating, int noRatings, Date postDate ) {
         
@@ -42,12 +48,21 @@ public class MessageTopic {
         
     }    
 
+    //output data to string
     public String toString () {
         
-        return "Post ID = " + postID + " Title = " + postTitle + " post Creator = " + postCreator + " rating = " + postRating + " post date = " + postDate;  
+       
+        
+        DateFormat dateFormat = new SimpleDateFormat("MMMM dd yyyy");
+        java.util.Date date = new java.util.Date();
+        //System.out.println("Current Date : " + dateFormat.format(date));
+        
+        return "Post ID = " + postID + " Title = " + postTitle + " post Creator = " + postCreator + " rating = " +
+                postRating + " post date = " + dateFormat.format(postDate);  
     
     }    
     
+    //getters and setters
     public int getPostID() {
         return postID;
     }
