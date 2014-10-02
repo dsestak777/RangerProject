@@ -152,7 +152,6 @@ public class ForumsController {
             // add the topic to the dynamic list
             rangers.getTopics().add(tempTopic);
             //update the table
-            System.out.println(rangers.getTopics().get(rangers.getTopics().size()-1).toString());
             
             updateTopicTable();
         }
