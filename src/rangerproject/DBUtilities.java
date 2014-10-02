@@ -726,6 +726,7 @@ public class DBUtilities {
                 int rating = rs.getInt("postRating");
                 int noRate = rs.getInt("numberOfRatings");
                 Timestamp timestamp = rs.getTimestamp("postDate");
+                
          
              //   Date date = rs.getObject("postDate", Date.valueOf(LocalDate.MIN));
                 

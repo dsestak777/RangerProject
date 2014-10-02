@@ -1,49 +1,67 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This is the main topic class.
  */
 package rangerproject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  *
- * @author dsestak
+ * @author dsestak, A.Bunk
  */
 public class MessageTopic {
     
-    //list instance variables
-    private int postID;
-    private String postTitle;
-    private String postCreator;
-    private int postCreatorID;
-    private String postMessage;
-    private int postRating;
-    private int noRatings;
-    private Date postDate;
+    //list instance variables in Property wrappers so they can be used by JavaFX
+    private final IntegerProperty postID;
+    private final StringProperty postTitle;
+    private final StringProperty postCreator;
+    private final IntegerProperty postCreatorID;
+    private final StringProperty postMessage;
+    private final IntegerProperty postRating;
+    private final IntegerProperty noRatings;
+    private final ObjectProperty<Date> postDate; 
+    
    
     
     //no argument constructor
     public MessageTopic () {
-        
+        // modified this so as to allow the user to auto set the creator name on their messages
+        Rangers ranger  = new Rangers();
+        java.util.Date date = new java.util.Date();
+        this.postID = new SimpleIntegerProperty();
+        this.postTitle = new SimpleStringProperty();
+        this.postCreator = new SimpleStringProperty(ranger.getPassword());
+        this.postCreatorID = new SimpleIntegerProperty();
+        this.postMessage = new SimpleStringProperty();
+        this.postRating = new SimpleIntegerProperty();
+        this.noRatings = new SimpleIntegerProperty();
+        this.postDate = new SimpleObjectProperty(date); 
     }
     
-    //full constructor
+    //full constructor utilizing property wrappers
     public MessageTopic (int postID, String postTitle, String postCreator, int postCreatorID, 
-            String postMessage, int postRating, int noRatings, Date postDate ) {
+            String postMessage, int postRating, int noRatings, Date postDate) {
         
-        this.postID = postID;
-        this.postTitle = postTitle;
-        this.postCreator = postCreator;
-        this.postCreatorID = postCreatorID;
-        this.postMessage = postMessage;
-        this.postRating = postRating;
-        this.noRatings = noRatings;
-        this.postDate = postDate;
+        this.postID = new SimpleIntegerProperty(postID);
+        this.postTitle = new SimpleStringProperty(postTitle);
+        this.postCreator = new SimpleStringProperty(postCreator);
+        this.postCreatorID = new SimpleIntegerProperty(postCreatorID);
+        this.postMessage = new SimpleStringProperty(postMessage);
+        this.postRating = new SimpleIntegerProperty(postRating);
+        this.noRatings = new SimpleIntegerProperty(noRatings);
+        this.postDate = new SimpleObjectProperty(postDate);
+        
                 
         
     }    
@@ -53,7 +71,7 @@ public class MessageTopic {
         
        
         
-        DateFormat dateFormat = new SimpleDateFormat("MMMM dd yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("MM dd yyyy");
         java.util.Date date = new java.util.Date();
         //System.out.println("Current Date : " + dateFormat.format(date));
         
@@ -62,70 +80,105 @@ public class MessageTopic {
     
     }    
     
-    //getters and setters
+    //getters and setters modified
     public int getPostID() {
+        return postID.get();
+    }
+    
+    public void setPostID(int postID)
+    {
+        this.postID.set(postID);
+    }
+
+    public IntegerProperty getPostIDProperty() {
         return postID;
     }
-
-    public void setPostID(int postID) {
-        this.postID = postID;
+    
+    public String getPostTitle() {
+        return postTitle.get();
+    }
+    
+    public void setPostTitle (String postTitle) {
+        this.postTitle.set(postTitle);
     }
 
-    public String getPostTitle() {
+    public StringProperty getPostTitleProperty() {
         return postTitle;
     }
-
-    public void setPostTitle(String postTitle) {
-        this.postTitle = postTitle;
+    
+    public String getPostCreator() {
+        return postCreator.get();
+    }
+    
+    public void setPostCreator (String postCreator) {
+        this.postCreator.set(postCreator);
     }
 
-    public String getPostCreator() {
+    public StringProperty getPostCreatorProperty() {
         return postCreator;
     }
-
-    public void setPostCreator(String postCreator) {
-        this.postCreator = postCreator;
+    
+    public int getPostCreatorID() {
+        return postCreatorID.get();
+    }
+    
+    public void setPostCreatorID(int postCreatorID) {
+        this.postCreatorID.set(postCreatorID);
     }
 
-    public int getPostCreatorID() {
+    public IntegerProperty getPostCreatorIDProperty() {
         return postCreatorID;
     }
-
-    public void setPostCreatorID(int postCreatorID) {
-        this.postCreatorID = postCreatorID;
+    
+    public String getPostMessage() {
+        return postMessage.get();
+    }
+    
+    public void setPostMessage(String message) {
+        this.postMessage.set(message);
     }
 
-    public String getPostMessage() {
+    public StringProperty getPostMessageProperty() {
         return postMessage;
     }
-
-    public void setPostMessage(String postMessage) {
-        this.postMessage = postMessage;
+    
+    public int getPostRating() {
+        return postRating.get();
+    }
+    
+    public void setPostRating(int rating) {
+        this.postRating.set(rating);
     }
 
-    public int getPostRating() {
+    public IntegerProperty getPostRatingProperty() {
         return postRating;
     }
-
-    public void setPostRating(int postRating) {
-        this.postRating = postRating;
+    
+    public int getNoRatings () {
+        return noRatings.get();
+    }
+    
+    public void setNoRatings(int noRating) {
+        this.noRatings.set(noRating);
     }
 
-    public int getNoRatings() {
+    public IntegerProperty getNoRatingsProperty() {
         return noRatings;
     }
-
-    public void setNoRatings(int noRatings) {
-        this.noRatings = noRatings;
+    
+    public Date getPostDate() {
+        return postDate.get();
+    }
+    
+    public void setPostDate(Date postDate) {
+        this.postDate.set(postDate);
     }
 
-    public Date getPostDate() {
+    public ObjectProperty<Date> getPostDateProperty() {
         return postDate;
     }
-
-    public void setPostDate(Date postDate) {
-        this.postDate = postDate;
-    }
+    
+    
     
     
 }

@@ -1,41 +1,53 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This is the reply class.  I modified the types and wrapped them in the 
+ * property wrappers so they can be interacted with.
  */
 package rangerproject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Logger;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  *
- * @author dsestak
+ * @author dsestak, A.Bunk
  */
 public class MessagePost {
  
-    //list instance variables
-    private int postID;
-    private String replyTitle;
-    private String replyCreator;
-    private String replyMessage;
-    private Date replyDate;
+    //list variables we need to wrap these in property wrappers
+    private final IntegerProperty postID;
+    private final StringProperty replyTitle;
+    private final StringProperty replyCreator;
+    private final StringProperty replyMessage;
+    private final ObjectProperty<Date> replyDate;
  
     //no argument contructor
     public MessagePost () {
-        
+        java.util.Date date = new java.util.Date();
+        postID = new SimpleIntegerProperty();
+        replyTitle = new SimpleStringProperty();
+        replyCreator = new SimpleStringProperty();
+        replyMessage = new SimpleStringProperty();
+        replyDate = new SimpleObjectProperty(date);
     }
     
     //full constructor
     public MessagePost (int postID, String replyTitle, String replyCreator, 
-            String replyMessage, Date replyDate) {
+            String replyMessage, Date date) {
         
-        this.postID = postID;
-        this.replyTitle = replyTitle;
-        this.replyCreator = replyCreator;
-        this.replyMessage = replyMessage;
-        this.replyDate = replyDate;
+        
+        this.postID = new SimpleIntegerProperty(postID);
+        this.replyTitle = new SimpleStringProperty(replyTitle);
+        this.replyCreator = new SimpleStringProperty(replyCreator);
+        this.replyMessage = new SimpleStringProperty(replyMessage);
+        this.replyDate = new SimpleObjectProperty(date);
         
     }
     
@@ -50,46 +62,68 @@ public class MessagePost {
                 
     }
 
-    //getters and setters
-    public int getPostID() {
+    //getters and setters modified 
+    public int getPostID () {
+        return postID.get();
+    }
+    
+    public void setPostID(int postID) {
+        this.postID.set(postID);
+    }
+
+    public IntegerProperty getPostIDProperty() {
         return postID;
     }
-
-    public void setPostID(int postID) {
-        this.postID = postID;
+    
+    public String getReplyTitle() {
+        return replyTitle.get();
+    }
+    
+    public void setReplyTitle(String replyTitle) {
+        this.replyTitle.set(replyTitle);
     }
 
-    public String getReplyTitle() {
+    public StringProperty getReplyTitleProperty() {
         return replyTitle;
     }
-
-    public void setReplyTitle(String replyTitle) {
-        this.replyTitle = replyTitle;
+    
+    public String getReplyCreator () {
+        return replyCreator.get();
+    }
+    
+    public void setReplyCreator(String replyCreator) {
+        this.replyCreator.set(replyCreator);
     }
 
-    public String getReplyCreator() {
+    public StringProperty getReplyCreatorProperty() {
         return replyCreator;
     }
-
-    public void setReplyCreator(String replyCreator) {
-        this.replyCreator = replyCreator;
+    
+    public String getReplyMessage() {
+        return replyMessage.get();
+    }
+    
+    public void setReplyMessage(String replyMessage) {
+        this.replyMessage.set(replyMessage);
     }
 
-    public String getReplyMessage() {
+    public StringProperty getReplyMessageProperty() {
         return replyMessage;
     }
-
-    public void setReplyMessage(String replyMessage) {
-        this.replyMessage = replyMessage;
+    
+    public Date getReplyDate() {
+        return replyDate.get();
+    }
+    
+    public void setReplyDate(Date replyDate) {
+        this.replyDate.set(replyDate);
     }
 
-    public Date getReplyDate() {
+    public ObjectProperty<Date> getReplyDateProperty() {
         return replyDate;
     }
-
-    public void setReplyDate(Date replyDate) {
-        this.replyDate = replyDate;
-    }
+    
+    
     
     
     

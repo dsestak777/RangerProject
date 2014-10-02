@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rangerproject.TopicEditDialogController">
+   <children>
+      <GridPane prefHeight="282.0" prefWidth="570.0" AnchorPane.bottomAnchor="68.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0">
+         <children>
+            <Label text="Topic Title:" />
+            <Label text="Message:" GridPane.rowIndex="1" />
+            <TextField fx:id="topicTitle" GridPane.columnIndex="1" />
+            <TextArea fx:id="message" prefHeight="110.0" prefWidth="490.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         </children>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="106.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="500.0" minWidth="10.0" prefWidth="464.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="77.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="264.0" minHeight="10.0" prefHeight="193.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
+      <HBox alignment="CENTER" layoutX="366.0" layoutY="340.0" prefHeight="25.0" prefWidth="214.0" spacing="25.0">
+         <children>
+            <Button layoutX="341.0" layoutY="335.0" mnemonicParsing="false" onAction="#onSubmit" text="Submit" />
+            <Button layoutX="433.0" layoutY="335.0" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
+         </children>
+      </HBox>
+      <Label alignment="CENTER" layoutX="179.0" layoutY="15.0" text="Add to the Discussion" textAlignment="CENTER">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
