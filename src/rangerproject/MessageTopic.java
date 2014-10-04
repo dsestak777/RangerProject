@@ -41,7 +41,7 @@ public class MessageTopic {
         java.util.Date date = new java.util.Date();
         this.postID = new SimpleIntegerProperty();
         this.postTitle = new SimpleStringProperty();
-        this.postCreator = new SimpleStringProperty(ranger.getPassword());
+        this.postCreator = new SimpleStringProperty(ranger.getUsername());
         this.postCreatorID = new SimpleIntegerProperty();
         this.postMessage = new SimpleStringProperty();
         this.postRating = new SimpleIntegerProperty();

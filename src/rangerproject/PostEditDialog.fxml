@@ -7,14 +7,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rangerproject.TopicEditDialogController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rangerproject.PostEditDialogController">
    <children>
       <GridPane prefHeight="282.0" prefWidth="570.0" AnchorPane.bottomAnchor="68.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0">
          <children>
             <Label text="Topic Title:" />
             <Label text="Message:" GridPane.rowIndex="1" />
-            <TextField fx:id="topicTitle" GridPane.columnIndex="1" />
-            <TextArea fx:id="message" prefHeight="110.0" prefWidth="490.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="postTitle" GridPane.columnIndex="1" />
+            <TextArea fx:id="postMessage" prefHeight="110.0" prefWidth="490.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="106.0" />

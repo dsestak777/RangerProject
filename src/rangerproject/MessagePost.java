@@ -30,10 +30,11 @@ public class MessagePost {
  
     //no argument contructor
     public MessagePost () {
+        Rangers ranger = new Rangers();
         java.util.Date date = new java.util.Date();
         postID = new SimpleIntegerProperty();
         replyTitle = new SimpleStringProperty();
-        replyCreator = new SimpleStringProperty();
+        replyCreator = new SimpleStringProperty(ranger.getUsername());
         replyMessage = new SimpleStringProperty();
         replyDate = new SimpleObjectProperty(date);
     }

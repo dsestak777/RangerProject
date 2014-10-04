@@ -131,10 +131,12 @@ public class ForumsController {
     private void handleEditTopic() {       
         MessageTopic chosenTopic = topicTable.getSelectionModel().getSelectedItem();
         if (chosenTopic != null) {
-            boolean newTopicClick = rangers.showTopicEditDialog(chosenTopic);
-            if (newTopicClick) {
-                updateTopicTable();
+            if (chosenTopic.getPostCreator().equals(rangers.getUsername())) {
+                boolean newTopicClick = rangers.showTopicEditDialog(chosenTopic);
+                if (newTopicClick) {
+                    updateTopicTable();
                 
+                }
             }
         }
         else
@@ -160,29 +162,30 @@ public class ForumsController {
     // this is the reply version of the newTopic but is used for replies...
     @FXML
     private void handleNewReply() {
-       // get the Message Topic the user wants to reply to
-       MessageTopic chosen = topicTable.getSelectionModel().getSelectedItem();
        // create a new reply
        MessagePost tempReply = new MessagePost();
        // set the tempReply's id
-       tempReply.setPostID(chosen.getPostID());
-       // set tempReply's username
-       tempReply.setReplyCreator(rangers.getUsername());
+       tempReply.setPostID(topicTable.getSelectionModel().getSelectedItem().getPostID());
+       //load the info
+       showPostInfo(tempReply);
        //launch the new display
        boolean newReply = rangers.showPostEditDialog(tempReply);
+       
        if (newReply) {
            rangers.getPosts().add(tempReply);
            updateReplyTable();
        }
     }
-    // this is the edit version for the replies
+    // this is the edit version for the replies, need to set alert
     @FXML
     private void handleEditReply() {
         MessagePost chosenPost = postTable.getSelectionModel().getSelectedItem();
         if (chosenPost != null){
-            boolean newPost = rangers.showPostEditDialog(chosenPost);
-            if (newPost) {
-                updateReplyTable();
+            if (chosenPost.getReplyCreator().equals(rangers.getUsername())) {
+                boolean newPost = rangers.showPostEditDialog(chosenPost);
+                if (newPost) {
+                    updateReplyTable();
+                }
             }
         }
         
@@ -274,6 +277,12 @@ public class ForumsController {
         topic.setPostTitle("ab");
         topic.setNoRatings(1);
                     
+    }
+    // we need this to set the reply messages to a value otherwise we get null exceptions
+    private void showPostInfo(MessagePost post) {
+        post.setReplyMessage("a");
+        post.setReplyTitle("ab");
+        post.setReplyCreator(rangers.getUsername());
     }
 
 }

@@ -22,10 +22,10 @@ public class PostEditDialogController {
      * Set up textfield and textarea
      */
     @FXML
-    private TextField topicTitle;
+    private TextField postTitle;
     
     @FXML 
-    private TextArea message;
+    private TextArea postMessage;
     
     // bring in the messagepost we can load info into
     private MessagePost newPost;
@@ -54,8 +54,9 @@ public class PostEditDialogController {
     // this sets up the input fields to store the information the user inputs
     public void setPost(MessagePost newPost) {
         this.newPost = newPost;
-        topicTitle.setText(newPost.getReplyTitle());
-        message.setText(newPost.getReplyMessage());
+        
+        postTitle.setText(newPost.getReplyTitle());
+        postMessage.setText(newPost.getReplyMessage());
         
     }
     //TODO set up alert box
@@ -64,8 +65,8 @@ public class PostEditDialogController {
     private void onSubmit() {
         if (isInputValid()) {
             // load the user info into the post
-            newPost.setReplyTitle(topicTitle.getText());
-            newPost.setReplyMessage(message.getText());
+            newPost.setReplyTitle(postTitle.getText());
+            newPost.setReplyMessage(postMessage.getText());
             // set boolean to true
             submitClick = true;
             //close the dialog window
@@ -85,12 +86,12 @@ public class PostEditDialogController {
     //we use this to let the user know there is an error with a field they are inputting
     private boolean isInputValid() {
         // we want to make sure there is something here, but that the topic is not too long
-        if (topicTitle.getText() == null || topicTitle.getText().length() == 0 || topicTitle.getText().length() > 75) {
+        if (postTitle.getText() == null || postTitle.getText().length() == 0 || postTitle.getText().length() > 75) {
             System.out.println("Need to check the errors");
                     
         }
         // we want to make sure the message has something but is not longer than 300 characters
-        if (message.getText() == null || message.getText().length() == 0 || message.getText().length() > 300) {
+        if (postMessage.getText() == null || postMessage.getText().length() == 0 || postMessage.getText().length() > 300) {
             System.out.println("Need to check the errors");
             return false;
         }
