@@ -55,6 +55,9 @@ public class PostEditDialogController {
     public void setPost(MessagePost newPost) {
         this.newPost = newPost;
         
+        postTitle = new TextField();
+        postMessage = new TextArea();
+        
         postTitle.setText(newPost.getReplyTitle());
         postMessage.setText(newPost.getReplyMessage());
         
