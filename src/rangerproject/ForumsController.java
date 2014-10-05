@@ -224,7 +224,7 @@ public class ForumsController {
             }
             else {
                 //TODO set up a dialog box that lets them know there are no replies
-                System.out.println("No replies!");
+                
             }
         }
             // now we need to load the table if the reply size is correct

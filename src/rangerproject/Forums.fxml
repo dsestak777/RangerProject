@@ -31,7 +31,6 @@
                                  <children>
                                     <Button mnemonicParsing="false" onAction="#handleNewReply" text="Reply" />
                                     <Button mnemonicParsing="false" onAction="#handleEditReply" text="Edit Reply" />
-                                    <Button mnemonicParsing="false" onAction="#handleRateReply" text="Rate Reply" />
                                  </children>
                               </VBox>
                            </children>
