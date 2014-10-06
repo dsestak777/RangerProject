@@ -176,6 +176,40 @@ public class ForumsController {
            updateReplyTable();
        }
     }
+    
+    @FXML
+    private void handleRateTopic() {
+       // create a new reply
+       int topicID=0;
+       String topicTitle="";
+       
+       try{
+       // get the topic's info
+       topicID = topicTable.getSelectionModel().getSelectedItem().getPostID();
+       topicTitle = topicTable.getSelectionModel().getSelectedItem().getPostMessage();
+       
+         //load the info
+    //   showPostInfo(tempReply);
+        
+       //launch the new display
+       boolean newRating = rangers.showRatingDialog(topicID, topicTitle);
+       
+        if (newRating) {
+        //   rangers.getPosts().add(tempReply);
+      //     updateReplyTable();
+       }
+       
+       } catch (Exception e) {
+           //Do nothing
+           
+       }
+       
+       
+     
+       
+      
+    }
+    
     // this is the edit version for the replies, need to set alert
     @FXML
     private void handleEditReply() {
@@ -192,10 +226,7 @@ public class ForumsController {
         
     }
     //TODO add topic rating button
-    @FXML
-    private void handleRateTopic() {
-        
-    }
+  
     
     
     //TODO add reply rating button
