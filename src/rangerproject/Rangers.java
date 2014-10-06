@@ -100,6 +100,7 @@ public class Rangers extends Application {
     
     // use this to open the newTopic box if clicked on in the forums.fxml
     public boolean showTopicEditDialog (MessageTopic message) {
+       
         try {
             // load up the FXML
             FXMLLoader loader = new FXMLLoader();
@@ -177,6 +178,46 @@ public class Rangers extends Application {
         }
         
     }
+    
+     public boolean showRatingDialog (int topicID, String topicTitle) {
+        try {
+            // load the FXML
+            FXMLLoader ratingLoader = new FXMLLoader();
+            ratingLoader.setLocation(Rangers.class.getResource("TopicRatingDialog.fxml"));
+            AnchorPane page = (AnchorPane) ratingLoader.load();
+            
+            //create the dialog stage that is needed to display the FXML
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Rate This Topic");
+            
+            // the below is used to prevent user from messing with other windows
+            // until they have finished with this window
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+            
+            // set the post we want to view in the controller
+            // create a dialog  
+            TopicRatingDialogController controller = new TopicRatingDialogController();
+            // get the stage we want to use
+            controller.setDialogStage(dialogStage);
+            
+            controller.setTopic(topicTitle);
+            
+            //show the dialog and wait until the user closes it out
+            dialogStage.showAndWait();    
+            
+            //return the boolean so we know they submitted the msg
+            return controller.isSubmitClick();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        
+    }
+    
     // need to fix
     public void showWelcome() {
         try {
