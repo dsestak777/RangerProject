@@ -222,15 +222,7 @@ public class ForumsController {
         
         
     }
-    //TODO add topic rating button
-  
-    
-    
-    //TODO add reply rating button
-    @FXML
-    private void handleRateReply() {
-    
-    }
+   
     
     //this method dyamically sets up the reply posts so that the user can select a post  
     // then the reply table will populate with the replies to the initial post

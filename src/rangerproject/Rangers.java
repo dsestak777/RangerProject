@@ -8,6 +8,7 @@ package rangerproject;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -20,6 +21,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import static rangerproject.DBUtilities.addUser;
+import static rangerproject.DBUtilities.logINUser;
+import static rangerproject.DBUtilities.logOutUser;
 
 /**
  *
@@ -35,27 +39,61 @@ public class Rangers extends Application {
     // set up password and Username fields
     private String username = "";
     private String password = "";
-    private static String topicTitle;
+
+    DBUtilities dbu;
     
-    // load some sample data 
+   
     public Rangers() {
         DateFormat dateFormat = new SimpleDateFormat("MM dd yyyy");
         java.util.Date date = new java.util.Date();
-        topics.add(new MessageTopic(1000, "Hi", "Andy", 1000, "Hello World!", 1, 0, date));
-        topics.add(new MessageTopic(1001, "Hi", "Ben", 1001, "Hello World!", 1, 0, date));
-        topics.add(new MessageTopic(1002, "Hi", "James", 1002, "Hello World!", 1, 0, date));
-        topics.add(new MessageTopic(1003, "Hi", "Hello", 1003, "Hello World!", 1, 0, date));
+        
+        //delete database tables if they exists
+        
+        //preset username & password
         username = "itp220";
         password = "itp220";
+        
+        //create the database tables
+        dbu.createTables();
+        
+        //add some usesrs
+        dbu.addUser("test2","123");
+        dbu.addUser("test1", "111");
+        
+        //log in these users 
+        dbu.logINUser ("test2","123");
+        dbu.logINUser ("test1", "111");
+       
+        //add some posts 
+        dbu.addPost("First Post", "test2", 1, "ALL YOUR BASE ARE BELONG TO US");
+        dbu.addPost("Second Post", "test1", 2, "THE RAIN IN SPAIN");
+        dbu.addPost("Third Post", "test2", 1, "TO INFINITY AND BEYOND");
+        dbu.addPost("Fourth Post", "test1", 2, "WHAT ME WHY WORRY");
+        dbu.addPost("Fifth Post", "test2", 2, "GIVE ME FIVE");
+        
+        //logout users 
+        dbu.logOutUser("test2");
+        dbu.logOutUser("test1");
+        
+        //update 
+        updateMessageTopics();
+        
+        //add some junk data to database
+        
+    //    topics.add(new MessageTopic(1000, "Hi", "Andy", 1000, "Hello World!", 1, 0, date));
+    //    topics.add(new MessageTopic(1001, "Hi", "Ben", 1001, "Hello World!", 1, 0, date));
+    //    topics.add(new MessageTopic(1002, "Hi", "James", 1002, "Hello World!", 1, 0, date));
+    //    topics.add(new MessageTopic(1003, "Hi", "Hello", 1003, "Hello World!", 1, 0, date));
+        
         // set up the posts
-        posts.add(new MessagePost (1000, "May", "James", "A lost man journeying in the dark!", date));
-        posts.add(new MessagePost (1002, "May", "James", "A lost man journeying in the dark!", date));
-        posts.add(new MessagePost (1003, "May", "James", "A lost man journeying in the dark!", date));
-        posts.add(new MessagePost (1003, "May", "James", "A lost man journeying in the dark!", date));
-        posts.add(new MessagePost (1000, "May", "James", "A lost man journeying in the dark!", date));
-        posts.add(new MessagePost (1001, "May", "James", "A lost man journeying in the dark!", date));
-        posts.add(new MessagePost (1003, "May", "James", "A lost man journeying in the dark!", date));
-        posts.add(new MessagePost (1001, "May", "James", "A lost man journeying in the dark!", date));
+    //    posts.add(new MessagePost (1000, "May", "James", "A lost man journeying in the dark!", date));
+    //    posts.add(new MessagePost (1002, "May", "James", "A lost man journeying in the dark!", date));
+    //    posts.add(new MessagePost (1003, "May", "James", "A lost man journeying in the dark!", date));
+    //    posts.add(new MessagePost (1003, "May", "James", "A lost man journeying in the dark!", date));
+    //    posts.add(new MessagePost (1000, "May", "James", "A lost man journeying in the dark!", date));
+    //    posts.add(new MessagePost (1001, "May", "James", "A lost man journeying in the dark!", date));
+    //    posts.add(new MessagePost (1003, "May", "James", "A lost man journeying in the dark!", date));
+    //    posts.add(new MessagePost (1001, "May", "James", "A lost man journeying in the dark!", date));
         
     }
     @Override
@@ -70,6 +108,17 @@ public class Rangers extends Application {
         
         
     }
+    
+    //method to update MessageTopic arraylist from Database
+    public void updateMessageTopics() {
+       
+       ArrayList<MessageTopic> tempArray = dbu.viewByDate(); 
+     
+       //cast arraylist to observablearraylist
+       topics = FXCollections.observableArrayList(tempArray);
+        
+    }
+    
     
     //method to show the main topic window
     public boolean showForums() {
@@ -208,14 +257,9 @@ public class Rangers extends Application {
          //   TopicRatingDialogController controller = new TopicRatingDialogController();
             // get the stage we want to use
             TopicRatingDialogController controller = ratingLoader.<TopicRatingDialogController>getController();
-           
-            setTopicTitle(topicTitle);   
             
             controller.setDialogStage(dialogStage);
-           
-            
-         
-            
+             
             controller.setTopic(topic);
        //     controller.setTopic(topicTitle);
             
@@ -306,14 +350,6 @@ public class Rangers extends Application {
         this.password = password;
     }
    
-    public void setTopicTitle(String topic) {
-        
-        this.topicTitle = topic;
-    }
-    
-    public static String getTopicTitle () {
-        
-        return topicTitle;
-    }
+   
 }
 

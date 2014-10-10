@@ -243,6 +243,31 @@ public class DBUtilities {
  
     }
     
+    public void deleteTables() { 
+        
+     con=null;
+     stmt=null;
+     
+     String dropTableUsers = "DROP TABLE users"; 
+     
+        try {
+         
+         checkConnect();
+         
+         stmt.executeUpdate(dropTableUsers);
+         System.out.println("tables deleted!");
+         
+        }
+        catch (SQLException e) {
+            
+            System.out.println("table deletion error!");
+            System.out.print(e);
+            
+        }
+     
+        
+    }
+     
      //method to check if a user is logged in
     public static boolean isUserLoggedIN (String name) {
         
