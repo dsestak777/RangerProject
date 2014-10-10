@@ -30,7 +30,7 @@ public class PostEditDialogController {
     // bring in the messagepost we can load info into
     private MessagePost newPost;
     // set up a new stage
-    private Stage postDialogStage;
+    private static Stage postDialogStage;
     // set up a boolean to know if someone has hit the submit button
     private boolean submitClick = false;
     
@@ -45,7 +45,7 @@ public class PostEditDialogController {
     
     // set the dialog for this stage
     public void setDialogStage(Stage postDialogStage) {
-        this.postDialogStage = postDialogStage;
+        PostEditDialogController.postDialogStage = postDialogStage;
     }
     // find out if submit has been clicked on
     public boolean isSubmitClick() {

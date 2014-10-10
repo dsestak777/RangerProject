@@ -70,7 +70,7 @@ public class ForumsController {
     private Stage forumStage;
     // boolean to know if program launched properly
     private boolean enterClick;
-    
+     
     // empty constructor
     public ForumsController() {
         
@@ -138,6 +138,9 @@ public class ForumsController {
                 
                 }
             }
+            else {
+                 System.out.println("You are not the post creator!!");
+            }
         }
         else
             System.out.println("There is an issue loading the data!");
@@ -164,8 +167,16 @@ public class ForumsController {
     private void handleNewReply() {
        // create a new reply
        MessagePost tempReply = new MessagePost();
+       
+       //  
+       MessageTopic chosenTopic = topicTable.getSelectionModel().getSelectedItem();
+       System.out.println(chosenTopic.getPostID());
+       
        // set the tempReply's id
        tempReply.setPostID(topicTable.getSelectionModel().getSelectedItem().getPostID());
+       
+       System.out.println("Post ID=" + tempReply.getPostID());
+    
        //load the info
        showPostInfo(tempReply);
        //launch the new display
@@ -177,38 +188,24 @@ public class ForumsController {
        }
     }
     
+  
     @FXML
-    private void handleRateTopic() {
-       // create a new reply
-       int topicID=0;
-       String topicTitle="";
-       
-       try{
-       // get the topic's info
-       topicID = topicTable.getSelectionModel().getSelectedItem().getPostID();
-       topicTitle = topicTable.getSelectionModel().getSelectedItem().getPostMessage();
-       
-         //load the info
-    //   showPostInfo(tempReply);
-        
-       //launch the new display
-       boolean newRating = rangers.showRatingDialog(topicID, topicTitle);
-       
-        if (newRating) {
-        //   rangers.getPosts().add(tempReply);
-      //     updateReplyTable();
-       }
-       
-       } catch (Exception e) {
-           //Do nothing
-           
-       }
-       
+    private void handleRateTopic() {       
+        MessageTopic chosenTopic = topicTable.getSelectionModel().getSelectedItem();
+        if (chosenTopic != null) {
+          
+                boolean rateTopicClick = rangers.showRatingDialog(chosenTopic);
+                if (rateTopicClick) {
+                   // updateTopicTable();
+                
+                }
+            
+        }
+        else
+            System.out.println("There is an issue loading the data!");
+    }
        
      
-       
-      
-    }
     
     // this is the edit version for the replies, need to set alert
     @FXML

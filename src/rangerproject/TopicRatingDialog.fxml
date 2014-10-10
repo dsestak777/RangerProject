@@ -23,7 +23,7 @@
             <Label text="Topic Title:" />
             <Label text="Rating:" GridPane.rowIndex="1" />
             <Slider fx:id="ratingSlider" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" maxWidth="-Infinity" minorTickCount="0" prefHeight="18.0" prefWidth="200.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label fx:id="postTitle" prefHeight="21.0" prefWidth="382.0" text="Label" GridPane.columnIndex="1" />
+            <Label fx:id="postTitle" prefHeight="21.0" prefWidth="415.0" text="Label" GridPane.columnIndex="1" />
          </children>
       </GridPane>
       <HBox alignment="CENTER" layoutX="341.0" layoutY="189.0" prefHeight="20.0" prefWidth="214.0" spacing="25.0">

@@ -35,7 +35,7 @@ public class Rangers extends Application {
     // set up password and Username fields
     private String username = "";
     private String password = "";
-    
+    private static String topicTitle;
     
     // load some sample data 
     public Rangers() {
@@ -120,7 +120,8 @@ public class Rangers extends Application {
             
             // now we set the topic we want to view in the controller
             // create a new controller
-            TopicEditDialogController controller = loader.getController();
+         //   TopicEditDialogController controller = loader.getController();
+             TopicEditDialogController controller = loader.<TopicEditDialogController>getController();
             // get the stage we want to use
             controller.setDialogStage(dialogStage);
             controller.setTopic(message);
@@ -161,7 +162,8 @@ public class Rangers extends Application {
             
             // set the post we want to view in the controller
             // create a dialog  
-            PostEditDialogController controller = new PostEditDialogController();
+       //   PostEditDialogController controller = new PostEditDialogController();
+            PostEditDialogController controller = postLoader.<PostEditDialogController>getController();
             // get the stage we want to use
             controller.setDialogStage(dialogStage);
             controller.setPost(message);
@@ -179,7 +181,11 @@ public class Rangers extends Application {
         
     }
     
-     public boolean showRatingDialog (int topicID, String topicTitle) {
+ //    public boolean showRatingDialog (int TopicID, String topicTitle) {
+     public boolean showRatingDialog (MessageTopic topic) {     
+    
+      //  System.out.println(topicTitle);
+         
         try {
             // load the FXML
             FXMLLoader ratingLoader = new FXMLLoader();
@@ -199,12 +205,21 @@ public class Rangers extends Application {
             
             // set the post we want to view in the controller
             // create a dialog  
-            TopicRatingDialogController controller = new TopicRatingDialogController();
+         //   TopicRatingDialogController controller = new TopicRatingDialogController();
             // get the stage we want to use
+            TopicRatingDialogController controller = ratingLoader.<TopicRatingDialogController>getController();
+           
+            setTopicTitle(topicTitle);   
+            
             controller.setDialogStage(dialogStage);
+           
             
-            controller.setTopic(topicTitle);
+         
             
+            controller.setTopic(topic);
+       //     controller.setTopic(topicTitle);
+            
+               
             //show the dialog and wait until the user closes it out
             dialogStage.showAndWait();    
             
@@ -290,9 +305,15 @@ public class Rangers extends Application {
     public void setPassword(String password) {
         this.password = password;
     }
-
+   
+    public void setTopicTitle(String topic) {
+        
+        this.topicTitle = topic;
+    }
     
-    
-    
+    public static String getTopicTitle () {
+        
+        return topicTitle;
+    }
 }
 

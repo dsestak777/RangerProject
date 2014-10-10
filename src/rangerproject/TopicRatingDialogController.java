@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,8 +27,9 @@ import javafx.stage.Stage;
  *
  * @author Bunk
  */
-public class TopicRatingDialogController {
+public class TopicRatingDialogController  {
 
+    Rangers rangers;
     private int rating = 5;  //default value
     private String postTopic;
     /**
@@ -36,21 +39,21 @@ public class TopicRatingDialogController {
     private Label postTitle;
     
     @FXML 
- //   private TextArea postMessage;
     private Slider ratingSlider;
     
     // bring in the messagepost we can load info into
-  //  private MessagePost newPost;
-    private String messageTopic;
+    private MessageTopic topic;
+ //   private String messageTopic;
     // set up a new stage
     private static Stage postRatingStage;
     // set up a boolean to know if someone has hit the submit button
     private boolean submitClick = false;
-    
+   
     // empty constructor
-    public TopicRatingDialogController() {
+    public TopicRatingDialogController () {
         
     }
+    
     
     public void initialize() {
         
@@ -64,24 +67,50 @@ public class TopicRatingDialogController {
                             Number oldValue, Number newValue)
                             
                     {
-                        //set interest rate based upon slider position
+                        //set rating based upon slider position
                         rating = (int) (newValue.intValue() / 100.0);
-                        
-                        //set text based upon loan interest rate selected
-                     //   interestRateLabel.setText("Interest Rate = " + percent.format(interestRate));
+                 
+                      
+                       
                     }        
                 });
         
-    //    postTitle.setText("Post Title");
-        String topic=getTopic();
-        postTitle.setText(topic);
+        postTitle.setText("Post Title");
+        
+              
+        postTitle.textProperty().addListener(
+                new ChangeListener<String>()
+                {
+             @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+              
+                   
+              //   postTitle.textProperty().bind(observable);    
+            }
+          });
+        
+     //   String topic = rangers.getCurrentTopic();
+    //    postTitle.setText(messageTopic);
+      //   postTitle.textProperty().bind(messageTopic);
+     //   ObservableValue<String> topic = "test";
+      //  postTitle.textProperty().bind(messageTopic);    
+            
+    //    postTitle.setText(getMessageTopic());
+          
+    //     messageTopic = Rangers.getTopicTitle();
+        
+                    
+      //   System.out.println("topic="+messageTopic);
+        
     }   
+    
     
    
     
     // set the dialog for this stage
     public void setDialogStage(Stage postRatingStage) {
         TopicRatingDialogController.postRatingStage = postRatingStage;
+     //     this.postRatingStage = postRatingStage; 
     }
     
     // find out if submit has been clicked on
@@ -90,22 +119,30 @@ public class TopicRatingDialogController {
     }
     // this sets the post title
    
-    public void setTopic(String messageTopic) {
-        this.messageTopic = messageTopic;
+    @FXML
+ //   public void setTopic(String messageTopic) {
+     public void setTopic(MessageTopic messageTopic) {
+    //    TopicRatingDialogController.messageTopic = messageTopic;
+       //   this.messageTopic = messageTopic;
+         this.topic = messageTopic;
+      //      String topicName = topic;
         
-     //   postTitle = new TextField();
+     //   ObservableValue<String> topic = messageTopic.getPostMessage();
+     //     postTitle = new TextField();
     //    postMessage = new TextArea();
-        System.out.println(messageTopic);
+    //    postTitle = new Label(messageTopic);
+         
+          
+           
+        postTitle.setText(topic.getPostTitle());
+        
+       
     //    postTitle.setText(messageTopic.getPostMessage());
-   //     postTitle.setText(messageTopic);
+    //    postTitle.setText(messageTopic);
           
     }
     
-    public String getTopic(){
-        
-        return messageTopic;
-        
-    }
+    
     //TODO set up alert box
     // the submit button
     @FXML 
@@ -120,6 +157,9 @@ public class TopicRatingDialogController {
             // set boolean to true
             submitClick = true;
             //close the dialog window
+            
+            
+            
             postRatingStage.close();
         }
         else {
@@ -157,5 +197,6 @@ public class TopicRatingDialogController {
       //  else 
             return true;
     }
+    
     
 }
