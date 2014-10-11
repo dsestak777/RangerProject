@@ -7,6 +7,7 @@
 package rangerproject;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -66,6 +67,8 @@ public class ForumsController {
     
     //Rangers Class
     private Rangers rangers;
+    //Database Utilities Class
+    DBUtilities dbu;
     // set up a stage
     private Stage forumStage;
     // boolean to know if program launched properly
@@ -154,11 +157,13 @@ public class ForumsController {
         showTopicInfo(tempTopic);
         boolean newTopicClick = rangers.showTopicEditDialog(tempTopic);
         if(newTopicClick) {
-            // add the topic to the dynamic list
-            rangers.getTopics().add(tempTopic);
-            //update the table
             
-            updateTopicTable();
+            // add the topic to the dynamic list
+         //   rangers.getTopics().add(tempTopic);
+           
+            //update the table
+            rangers.updateMessageTopics();
+         //   updateTopicTable();
         }
     }
     
@@ -238,15 +243,23 @@ public class ForumsController {
         // if it was set replies to 0 
        
         
-        for (int i = 0; i < rangers.getPosts().size(); ++i) {
-            if (id == rangers.getPosts().get(i).getPostID()) {
-                replies.add(rangers.getPosts().get(i));
-            }
-            else {
+        //get replies from database 
+        
+        ArrayList<MessagePost> tempArray = dbu.viewChosenPost(id);
+     
+        //cast arraylist to observablearraylist
+        replies = FXCollections.observableArrayList(tempArray);
+        
+        
+      //  for (int i = 0; i < rangers.getPosts().size(); ++i) {
+      //      if (id == rangers.getPosts().get(i).getPostID()) {
+      //          replies.add(rangers.getPosts().get(i));
+      //      }
+      //      else {
                 //TODO set up a dialog box that lets them know there are no replies
                 
-            }
-        }
+      //      }
+      //  }
             // now we need to load the table if the reply size is correct
         if (replies.size() != 0) {
             postTable.setItems(replies);

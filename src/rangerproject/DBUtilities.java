@@ -41,6 +41,7 @@ public class DBUtilities {
     private static String createUsersString;
     private static String createPostIndexString;
     private static String createPostReplyTable;
+    private static String dropTableUsers;
     private static PreparedStatement pstmt;
     private static ResultSet rs;
     private static CallableStatement ca;
@@ -243,18 +244,29 @@ public class DBUtilities {
  
     }
     
-    public void deleteTables() { 
+    public static void deleteTables() { 
         
      con=null;
      stmt=null;
      
-     String dropTableUsers = "DROP TABLE users"; 
+     dropTableUsers = "DROP TABLE IF EXISTS users"; 
+     String dropTablePostIndex = "DROP TABLE IF EXISTS postindex";
+     
      
         try {
          
          checkConnect();
          
          stmt.executeUpdate(dropTableUsers);
+         stmt.executeUpdate(dropTablePostIndex);
+         
+         for (int i=1; i<=100; i++ ) {
+            
+            String dropPostReplyTable = "DROP TABLE IF EXISTS postreply"+i;        
+            stmt.executeUpdate(dropPostReplyTable);     
+         }
+         
+        
          System.out.println("tables deleted!");
          
         }
@@ -914,26 +926,26 @@ public class DBUtilities {
         //try to get topic from postindex and postreply tables
         try {
             
-            checkConnect();
-            pstmt = con.prepareStatement(getTopic);
-            pstmt.setInt(1, postID);
-            rs = pstmt.executeQuery();
+        //    checkConnect();
+        //    pstmt = con.prepareStatement(getTopic);
+        //    pstmt.setInt(1, postID);
+        //    rs = pstmt.executeQuery();
             
             //while there is results get the data 
-            while (rs.next()) {
+        //    while (rs.next()) {
             
-                postnum = rs.getInt("postID");
-                title = rs.getString("postTitle");
-                creator = rs.getString("postCreatorName");
-                message = rs.getString("postMessage");
-                timestamp = rs.getTimestamp("postDate");
+        //        postnum = rs.getInt("postID");
+        //        title = rs.getString("postTitle");
+        //        creator = rs.getString("postCreatorName");
+        //        message = rs.getString("postMessage");
+        //        timestamp = rs.getTimestamp("postDate");
                 
                 //create a new messagepost object
-                post = new MessagePost (postnum, title, creator, message, timestamp);
+        //        post = new MessagePost (postnum, title, creator, message, timestamp);
                 
                 //add new object to arraylist
-                messagePost.add(post);
-            }   
+        //        messagePost.add(post);
+        //     }   
                 
             checkConnect();
             pstmt = con.prepareStatement(viewPost);

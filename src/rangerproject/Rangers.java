@@ -39,6 +39,7 @@ public class Rangers extends Application {
     // set up password and Username fields
     private String username = "";
     private String password = "";
+    private int userid = 0;
 
     DBUtilities dbu;
     
@@ -47,11 +48,14 @@ public class Rangers extends Application {
         DateFormat dateFormat = new SimpleDateFormat("MM dd yyyy");
         java.util.Date date = new java.util.Date();
         
-        //delete database tables if they exists
+      
         
         //preset username & password
-        username = "itp220";
-        password = "itp220";
+     //   username = "itp220";
+     //   password = "itp220";
+      
+        //delete database tables if they exists
+        dbu.deleteTables();
         
         //create the database tables
         dbu.createTables();
@@ -59,10 +63,12 @@ public class Rangers extends Application {
         //add some usesrs
         dbu.addUser("test2","123");
         dbu.addUser("test1", "111");
+        dbu.addUser("itp220", "220");
         
         //log in these users 
         dbu.logINUser ("test2","123");
         dbu.logINUser ("test1", "111");
+        dbu.logINUser("itp220","220");
        
         //add some posts 
         dbu.addPost("First Post", "test2", 1, "ALL YOUR BASE ARE BELONG TO US");
@@ -71,6 +77,16 @@ public class Rangers extends Application {
         dbu.addPost("Fourth Post", "test1", 2, "WHAT ME WHY WORRY");
         dbu.addPost("Fifth Post", "test2", 2, "GIVE ME FIVE");
         
+        //add some replies
+        dbu.addReply(1, "Reply Title", "Reply Message", "test2");
+        dbu.addReply(1, "Reply Title", "Reply Message", "test2");
+        dbu.addReply(2, "Reply Title2", "Reply Message2", "test1");
+        dbu.addReply(3, "Reply Title3", "Reply Message3", "test2");
+        dbu.addReply(4, "Reply Title4", "Reply Message4", "test1");
+        dbu.addReply(5, "Reply Title5", "Reply Message5", "test2");
+        dbu.addReply(5, "Reply Title6", "Reply Message5", "test2");
+        
+        
         //logout users 
         dbu.logOutUser("test2");
         dbu.logOutUser("test1");
@@ -78,23 +94,7 @@ public class Rangers extends Application {
         //update 
         updateMessageTopics();
         
-        //add some junk data to database
-        
-    //    topics.add(new MessageTopic(1000, "Hi", "Andy", 1000, "Hello World!", 1, 0, date));
-    //    topics.add(new MessageTopic(1001, "Hi", "Ben", 1001, "Hello World!", 1, 0, date));
-    //    topics.add(new MessageTopic(1002, "Hi", "James", 1002, "Hello World!", 1, 0, date));
-    //    topics.add(new MessageTopic(1003, "Hi", "Hello", 1003, "Hello World!", 1, 0, date));
-        
-        // set up the posts
-    //    posts.add(new MessagePost (1000, "May", "James", "A lost man journeying in the dark!", date));
-    //    posts.add(new MessagePost (1002, "May", "James", "A lost man journeying in the dark!", date));
-    //    posts.add(new MessagePost (1003, "May", "James", "A lost man journeying in the dark!", date));
-    //    posts.add(new MessagePost (1003, "May", "James", "A lost man journeying in the dark!", date));
-    //    posts.add(new MessagePost (1000, "May", "James", "A lost man journeying in the dark!", date));
-    //    posts.add(new MessagePost (1001, "May", "James", "A lost man journeying in the dark!", date));
-    //    posts.add(new MessagePost (1003, "May", "James", "A lost man journeying in the dark!", date));
-    //    posts.add(new MessagePost (1001, "May", "James", "A lost man journeying in the dark!", date));
-        
+      
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -137,7 +137,10 @@ public class Rangers extends Application {
         
             // allow the controller access to the forum
             ForumsController controller = loader.getController();
+            
             controller.setRangers(this);
+        
+            
             
             return controller.isEnterClick();
         }
@@ -150,6 +153,11 @@ public class Rangers extends Application {
     // use this to open the newTopic box if clicked on in the forums.fxml
     public boolean showTopicEditDialog (MessageTopic message) {
        
+        String userName = getUsername();
+        /**  need to add method to get userID */
+        int userID = getUserID();
+        
+        
         try {
             // load up the FXML
             FXMLLoader loader = new FXMLLoader();
@@ -173,7 +181,9 @@ public class Rangers extends Application {
              TopicEditDialogController controller = loader.<TopicEditDialogController>getController();
             // get the stage we want to use
             controller.setDialogStage(dialogStage);
-            controller.setTopic(message);
+          
+            
+            controller.setTopic(userID, userName);
             
             //show the dialog and wait until the user closes it out
             dialogStage.showAndWait();
@@ -295,7 +305,10 @@ public class Rangers extends Application {
             // allow the controller access to the forum
             WelcomeController controller = loader.getController();
             controller.setWelcomeStage(primaryStage);
+            
             controller.setUsername(this);
+            setUserID(3);
+            
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -342,6 +355,17 @@ public class Rangers extends Application {
         this.username = username;
     }
 
+    public int getUserID() {
+        
+        return userid;
+    }
+    
+    public void setUserID (int userID) {
+        
+        this.userid = userID;
+        
+    }
+    
     public String getPassword() {
         return password;
     }
