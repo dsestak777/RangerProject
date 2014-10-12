@@ -51,9 +51,16 @@ public class Rangers extends Application {
       
         
         //preset username & password
-     //   username = "itp220";
-     //   password = "itp220";
+        username = "itp220";
+        password = "220";
       
+        
+        
+      
+    }
+    
+    //method for testing add data & reset tables
+    public void addData() {
         //delete database tables if they exists
         dbu.deleteTables();
         
@@ -94,8 +101,9 @@ public class Rangers extends Application {
         //update 
         updateMessageTopics();
         
-      
-    }
+    }    
+    
+    
     @Override
     public void start(Stage primaryStage) throws Exception {
         
@@ -114,8 +122,11 @@ public class Rangers extends Application {
        
        ArrayList<MessageTopic> tempArray = dbu.viewByDate(); 
      
+       
        //cast arraylist to observablearraylist
        topics = FXCollections.observableArrayList(tempArray);
+       
+       setTopics(topics);
         
     }
     
@@ -178,7 +189,7 @@ public class Rangers extends Application {
             // now we set the topic we want to view in the controller
             // create a new controller
          //   TopicEditDialogController controller = loader.getController();
-             TopicEditDialogController controller = loader.<TopicEditDialogController>getController();
+            TopicEditDialogController controller = loader.<TopicEditDialogController>getController();
             // get the stage we want to use
             controller.setDialogStage(dialogStage);
           
@@ -308,6 +319,8 @@ public class Rangers extends Application {
             
             controller.setUsername(this);
             setUserID(3);
+            
+            addData();
             
         }
         catch (IOException e) {

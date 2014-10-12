@@ -301,6 +301,11 @@ public class DBUtilities {
             
             //get loggedIN variable from database for this user
             loggedIN = rs.getBoolean("userLoggedIN");
+            
+                if (loggedIN) {System.out.println("user is logged in!");}
+                else {System.out.println("user is not logged in!");}
+                
+            
             }
             
         }

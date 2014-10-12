@@ -83,6 +83,8 @@ public class TopicEditDialogController {
             //add New Post to database
             dbu.addPost(newTitle, userName, userID, newMessage);
             
+            
+            
             topicDialogStage.close();
         }
         else {
