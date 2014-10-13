@@ -160,8 +160,6 @@ public class ForumsController {
 
             topicTable.setItems(rangers.getTopics());
 
-            System.out.println("submit click@@@");
-
             updateTopicTable();
         }
     }
@@ -179,7 +177,7 @@ public class ForumsController {
         // set the tempReply's id
         tempReply.setPostID(topicTable.getSelectionModel().getSelectedItem().getPostID());
 
-        System.out.println("Post ID=" + tempReply.getPostID());
+    //    System.out.println("Post ID=" + tempReply.getPostID());
 
         //load the info
         showPostInfo(tempReply);
@@ -187,7 +185,11 @@ public class ForumsController {
         boolean newReply = rangers.showPostEditDialog(tempReply);
 
         if (newReply) {
-            rangers.getPosts().add(tempReply);
+          //  rangers.getPosts().add(tempReply);
+            rangers.updateMessageTopics();
+
+            topicTable.setItems(rangers.getTopics());
+            
             updateReplyTable();
         }
     }

@@ -165,7 +165,7 @@ public class Rangers extends Application {
     public boolean showTopicEditDialog (MessageTopic message) {
        
         String userName = getUsername();
-        /**  need to add method to get userID */
+        /**  need to add method to set userID */
         int userID = getUserID();
         
         
@@ -213,6 +213,9 @@ public class Rangers extends Application {
     
     // use this to open the newReply box if clicked on in the forums.fxml
     public boolean showPostEditDialog (MessagePost message) {
+        int postID = message.getPostID();
+        String userName = message.getReplyCreator();
+        
         try {
             // load the FXML
             FXMLLoader postLoader = new FXMLLoader();
@@ -236,7 +239,10 @@ public class Rangers extends Application {
             PostEditDialogController controller = postLoader.<PostEditDialogController>getController();
             // get the stage we want to use
             controller.setDialogStage(dialogStage);
-            controller.setPost(message);
+            
+            
+            
+            controller.setPost(postID, userName);
             
             //show the dialog and wait until the user closes it out
             dialogStage.showAndWait();    

@@ -29,10 +29,19 @@ public class PostEditDialogController {
     
     // bring in the messagepost we can load info into
     private MessagePost newPost;
+    
+    //intitalize reply variables
+    private int postID;
+    private String userName;
+    private String newTitle;
+    private String newMessage;
+    
     // set up a new stage
     private static Stage postDialogStage;
     // set up a boolean to know if someone has hit the submit button
     private boolean submitClick = false;
+    //Database Utilities Class
+    DBUtilities dbu;
     
     // empty constructor
     public PostEditDialogController() {
@@ -52,14 +61,15 @@ public class PostEditDialogController {
         return submitClick;
     }
     // this sets up the input fields to store the information the user inputs
-    public void setPost(MessagePost newPost) {
-        this.newPost = newPost;
+    public void setPost(int postID, String userName) {
+        this.postID = postID;
+        this.userName = userName;
         
-        postTitle = new TextField();
-        postMessage = new TextArea();
+     //   postTitle = new TextField();
+     //   postMessage = new TextArea();
         
-        postTitle.setText(newPost.getReplyTitle());
-        postMessage.setText(newPost.getReplyMessage());
+     //   postTitle.setText(newPost.getReplyTitle());
+     //   postMessage.setText(newPost.getReplyMessage());
         
     }
     //TODO set up alert box
@@ -68,11 +78,21 @@ public class PostEditDialogController {
     private void onSubmit() {
         if (isInputValid()) {
             // load the user info into the post
-            newPost.setReplyTitle(postTitle.getText());
-            newPost.setReplyMessage(postMessage.getText());
+           // newPost.setReplyTitle(postTitle.getText());
+           // newPost.setReplyMessage(postMessage.getText());
+              newTitle = postTitle.getText();
+              newMessage = postMessage.getText();
+              
+              //add new reply to database
+              dbu.addReply(postID, newTitle, newMessage, userName);
+              
+
             // set boolean to true
             submitClick = true;
             //close the dialog window
+           
+            
+            
             postDialogStage.close();
         }
         else {
