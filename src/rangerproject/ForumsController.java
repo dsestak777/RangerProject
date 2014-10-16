@@ -167,11 +167,16 @@ public class ForumsController {
     // this is the reply version of the newTopic but is used for replies...
     @FXML
     private void handleNewReply() {
+        
+        int postID = 0;
+        
         // create a new reply
         MessagePost tempReply = new MessagePost();
 
         //  
         MessageTopic chosenTopic = topicTable.getSelectionModel().getSelectedItem();
+        
+        postID = chosenTopic.getPostID();
         System.out.println(chosenTopic.getPostID());
 
         // set the tempReply's id
@@ -185,10 +190,17 @@ public class ForumsController {
         boolean newReply = rangers.showPostEditDialog(tempReply);
 
         if (newReply) {
-          //  rangers.getPosts().add(tempReply);
+          
+            //  rangers.getPosts().add(tempReply);
+            
+            
             rangers.updateMessageTopics();
 
+            rangers.updateMessagePosts(postID);
+            
             topicTable.setItems(rangers.getTopics());
+            
+            postTable.setItems(rangers.getPosts());
             
             updateReplyTable();
         }
@@ -200,8 +212,10 @@ public class ForumsController {
         if (chosenTopic != null) {
 
             boolean rateTopicClick = rangers.showRatingDialog(chosenTopic);
+            
             if (rateTopicClick) {
-                   // updateTopicTable();
+                   
+                    // updateTopicTable();
 
             }
 

@@ -131,6 +131,22 @@ public class Rangers extends Application {
     }
     
     
+    //method to update MessageTopic arraylist from Database
+    public void updateMessagePosts(int id) {
+       
+        
+        
+       //get replies from database 
+       ArrayList<MessagePost> tempArray = dbu.viewChosenPost(id);
+
+       //cast arraylist to observablearraylist
+       posts = FXCollections.observableArrayList(tempArray);
+       
+       
+       setPosts(posts);
+        
+    }
+    
     //method to show the main topic window
     public boolean showForums() {
         try {
