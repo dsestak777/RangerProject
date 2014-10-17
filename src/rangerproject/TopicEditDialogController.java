@@ -26,7 +26,7 @@ public class TopicEditDialogController {
     private TextArea message;
     
     // bring in a messageTopic we can load info into
-    private MessageTopic newTopic;
+    private MessageTopic editTopic;
     
     //initialize Post variables
     private int userID;
@@ -59,13 +59,13 @@ public class TopicEditDialogController {
     }
     // this is supposed to fire off in the rangers file
  //   public void setTopic(MessageTopic newTopic) {
-     public void setTopic(int userID, String userName) {
-        this.userID = userID;
+     public void setTopic(String userName, MessageTopic editTopic) {
+        this.editTopic = editTopic;
         this.userName = userName;
         
         // prompt the input fields to recieve input
-      //  topicTitle.setText(newTopic.getPostTitle());
-      //  message.setText(newTopic.getPostMessage());
+        topicTitle.setText(editTopic.getPostTitle());
+        message.setText(editTopic.getPostMessage());
         
     }
     //TODO need an alert box for below

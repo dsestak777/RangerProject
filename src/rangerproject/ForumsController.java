@@ -149,7 +149,7 @@ public class ForumsController {
     private void handleNewTopic() {
         MessageTopic tempTopic = new MessageTopic();
         showTopicInfo(tempTopic);
-        boolean newTopicClick = rangers.showTopicEditDialog(tempTopic);
+        boolean newTopicClick = rangers.showNewTopicDialog(tempTopic);
 
         if (newTopicClick) {
 

@@ -514,7 +514,7 @@ public class DBUtilities {
           
     }
     
-    //method used to add a new Post to the database
+    //method used to add a new Topic to the database
     public static void addPost (String title, String userName, int userID, String message) {
         
         //get the current data 
@@ -553,7 +553,7 @@ public class DBUtilities {
                 pstmt.setDate(5,date);
                 pstmt.executeUpdate();
                 
-                System.out.println("New Post Added!");
+                System.out.println("New Topic Added!");
                 
             }
             catch (SQLException e ) {
@@ -598,7 +598,60 @@ public class DBUtilities {
         }
     }
     
-    //metrhod used to add replies to a message post
+     //method used to edit a Topic the database
+    public static void editPost (int postID, String title, String userName, String message) {
+        
+        //get the current data 
+        java.sql.Date date = getCurrentJavaSqlDate();
+        
+        //check if the user is logged in
+        Boolean log = isUserLoggedIN(userName);
+        
+        //list & initializ local variable
+        int postNum = 0;
+        
+        //if not logged in disregard
+        if (log == false ) {
+            
+            // user not logged in
+            System.out.println("User not logged in!!");
+            
+            return;
+            
+        //if user is logged in add new post     
+        } else {
+            
+            //try to add new post to postindex
+            try { 
+            
+                //SQL string to add new post to postindex
+                String topicEdit = "INSERT INTO postindex (postTitle, postMessage) VALUES (?,?) WHERE postID = ?";
+        
+                checkConnect();
+                pstmt = con.prepareStatement(topicEdit);
+                pstmt.setString(1, title);
+                pstmt.setString(2, message);
+                pstmt.setInt(3, postID);
+               
+                pstmt.executeUpdate();
+                
+                System.out.println("Topic Edit Success!");
+                
+            }
+            catch (SQLException e ) {
+                
+                System.out.println("execute update error!");
+                System.out.print(e);
+                
+                
+            }
+            
+          
+        }
+    }
+    
+    
+    //method used to add replies to a message post
      public static void addReply (int postID, String title, String message, String userName) {
         
         // get the current data

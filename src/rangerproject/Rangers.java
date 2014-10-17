@@ -178,11 +178,62 @@ public class Rangers extends Application {
     }
     
     // use this to open the newTopic box if clicked on in the forums.fxml
-    public boolean showTopicEditDialog (MessageTopic message) {
+    public boolean showNewTopicDialog (MessageTopic message) {
        
         String userName = getUsername();
         /**  need to add method to set userID */
         int userID = getUserID();
+        
+        
+        try {
+            // load up the FXML
+            FXMLLoader newTopicLoader = new FXMLLoader();
+            newTopicLoader.setLocation(Rangers.class.getResource("NewTopicDialog.fxml"));
+            AnchorPane page = (AnchorPane) newTopicLoader.load();
+            
+            // create the dialog stage that is needed to display the fxml
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("New Topic");
+            // the below is used to prevent user from messing with other windows 
+            // until they have finished with this window
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+            
+            
+            // now we set the topic we want to view in the controller
+            // create a new controller
+         //   TopicEditDialogController controller = loader.getController();
+            NewTopicDialogController controller = newTopicLoader.<NewTopicDialogController>getController();
+            // get the stage we want to use
+            controller.setDialogStage(dialogStage);
+          
+            
+            controller.setTopic(userID, userName);
+            
+            //show the dialog and wait until the user closes it out
+            dialogStage.showAndWait();
+            
+            // return the boolean so we know they submitted the message
+            
+            
+            return controller.isSubmitClick();
+            
+        
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    
+    
+    // use this to open the newTopic box if clicked on in the forums.fxml
+    public boolean showTopicEditDialog (MessageTopic message) {
+       
+        String userName = getUsername();
+        
         
         
         try {
@@ -193,7 +244,7 @@ public class Rangers extends Application {
             
             // create the dialog stage that is needed to display the fxml
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("New Topic");
+            dialogStage.setTitle("Edit Topic");
             // the below is used to prevent user from messing with other windows 
             // until they have finished with this window
             dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -210,7 +261,7 @@ public class Rangers extends Application {
             controller.setDialogStage(dialogStage);
           
             
-            controller.setTopic(userID, userName);
+            controller.setTopic(userName, message);
             
             //show the dialog and wait until the user closes it out
             dialogStage.showAndWait();
