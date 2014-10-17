@@ -598,7 +598,7 @@ public class DBUtilities {
         }
     }
     
-     //method used to edit a Topic the database
+    //method used to edit a Topic the database
     public static void editPost (int postNum, String title, String userName, String message) {
         
         //get the current data 
@@ -622,8 +622,6 @@ public class DBUtilities {
             try { 
             
                 //SQL string to add new post to postindex
-           //     String topicEdit = "INSERT INTO postindex (postTitle, postMessage) VALUES (?,?) WHERE postID = ?";
-           //     String topicEdit = "UPDATE postindex SET (postTitle, postMessage) VALUES (?,?) WHERE postID = ?";
                 String topicEdit = "UPDATE postindex SET postTitle=?, postMessage=? WHERE postID=?";
         
                 checkConnect();
@@ -651,7 +649,7 @@ public class DBUtilities {
     
     
     //method used to add replies to a message post
-     public static void addReply (int postID, String title, String message, String userName) {
+     public static void addReply (int topicID, String title, String message, String userName) {
         
         // get the current data
         java.sql.Date date = getCurrentJavaSqlDate();
@@ -674,10 +672,10 @@ public class DBUtilities {
             try { 
                 
                 //use postID to get name of new reply table
-                String table = "postreply"+postID;
+                String table = "postreply"+topicID;
                 
                  //SQL string to insert new reply into table 
-                String addNewPost = "INSERT INTO " +table+ " (replyTitle, replyMessage, replyCreator, replyDate) VALUES (?,?,?,?)";
+                String addNewPost = "INSERT INTO " +table+ " (replyTitle, replyMessage, replyCreator, replyDate, topicID) VALUES (?,?,?,?,?)";
         
                 checkConnect();
                 pstmt = con.prepareStatement(addNewPost);
@@ -686,6 +684,7 @@ public class DBUtilities {
                 pstmt.setString(3, userName);
              //   pstmt.setDate(5,date.valueOf("1998-1-17"));
                 pstmt.setDate(4,date);
+                pstmt.setInt(5, topicID);
                 pstmt.executeUpdate();
                 
                 System.out.println("New Reply Added!");
@@ -703,6 +702,59 @@ public class DBUtilities {
         }
     }
     
+    //method used to add replies to a message post
+     public static void editReply (int topicID, int replyID, String title, String message, String userName) {
+        
+        // get the current data
+        java.sql.Date date = getCurrentJavaSqlDate();
+        
+        //check if the user is logged in 
+        Boolean log = isUserLoggedIN(userName);
+        
+        //if the user is not logged in then return
+        if (log == false ) {
+            
+            // user not logged in
+            System.out.println("User not logged in!!");
+            
+            return;
+        
+        //if the user is logged in then add the reply    
+        } else {
+        
+            
+            try { 
+                
+                //use postID to get name of new reply table
+                String table = "postreply"+topicID;
+                
+                 //SQL string to insert new reply into table 
+            //    String addNewPost = "INSERT INTO " +table+ " (replyTitle, replyMessage, replyCreator, replyDate, topicID) VALUES (?,?,?,?,?)";
+                String editPost = "UPDATE " +table+ " SET replyTitle=?, replyMessage=? WHERE replyID=?";
+           
+                checkConnect();
+                pstmt = con.prepareStatement(editPost);
+                pstmt.setString(1, title);
+                pstmt.setString(2, message);
+                pstmt.setInt(3, replyID);
+                pstmt.executeUpdate();
+                
+                System.out.println("New Reply Added!");
+                
+            }
+            catch (SQLException e ) {
+                
+                System.out.println("execute add reply update error!");
+                System.out.print(e);
+                
+                
+            }
+            
+            
+        }
+    } 
+     
+     
      //method used to create a reply table for each new post
     public static void createReplyTable (int postNum) {
         
@@ -716,6 +768,7 @@ public class DBUtilities {
                 + "replyMessage varchar(300) NOT NULL,"
                 + "replyCreator varchar(30) NOT NULL,"
                 + "replyDate date NOT NULL," 
+                + "topicID int(11) NOT NULL,"  
                 + "PRIMARY KEY (replyID))"
                 + "ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1";
          
