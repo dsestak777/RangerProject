@@ -281,6 +281,7 @@ public class Rangers extends Application {
     // use this to open the newReply box if clicked on in the forums.fxml
     public boolean showPostEditDialog (MessagePost message) {
         int postID = message.getPostID();
+        int topicID = message.getTopicID();
         String userName = message.getReplyCreator();
         
         try {
@@ -291,7 +292,7 @@ public class Rangers extends Application {
             
             //create the dialog stage that is needed to display the FXML
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("New Reply");
+            dialogStage.setTitle("Edit Reply");
             
             // the below is used to prevent user from messing with other windows
             // until they have finished with this window
@@ -309,7 +310,7 @@ public class Rangers extends Application {
             
             
             
-            controller.setPost(postID, userName);
+            controller.setPost(postID, topicID, userName, message);
             
             //show the dialog and wait until the user closes it out
             dialogStage.showAndWait();    

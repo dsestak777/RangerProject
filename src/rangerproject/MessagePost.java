@@ -27,6 +27,7 @@ public class MessagePost {
     private final StringProperty replyCreator;
     private final StringProperty replyMessage;
     private final ObjectProperty<Date> replyDate;
+    private final IntegerProperty topicID;
  
     //no argument contructor
     public MessagePost () {
@@ -37,11 +38,12 @@ public class MessagePost {
         replyCreator = new SimpleStringProperty(ranger.getUsername());
         replyMessage = new SimpleStringProperty();
         replyDate = new SimpleObjectProperty(date);
+        topicID = new SimpleIntegerProperty();
     }
     
     //full constructor
     public MessagePost (int postID, String replyTitle, String replyCreator, 
-            String replyMessage, Date date) {
+            String replyMessage, Date date, int topicID) {
         
         
         this.postID = new SimpleIntegerProperty(postID);
@@ -49,6 +51,7 @@ public class MessagePost {
         this.replyCreator = new SimpleStringProperty(replyCreator);
         this.replyMessage = new SimpleStringProperty(replyMessage);
         this.replyDate = new SimpleObjectProperty(date);
+        this.topicID = new SimpleIntegerProperty(topicID);
         
     }
     
@@ -70,6 +73,14 @@ public class MessagePost {
     
     public void setPostID(int postID) {
         this.postID.set(postID);
+    }
+    
+    public int getTopicID () {
+        return topicID.get();
+    }
+    
+    public void setTopicID(int topicID) {
+        this.topicID.set(topicID);
     }
 
     public IntegerProperty getPostIDProperty() {

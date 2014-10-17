@@ -1021,6 +1021,7 @@ public class DBUtilities {
         //list all local variables 
         ArrayList<MessagePost> messagePost = new ArrayList<>();
         int postnum;
+        int topicnum;
         String title;
         String creator;
         String message;
@@ -1070,9 +1071,10 @@ public class DBUtilities {
                 message = rs.getString("replyMessage");
                 creator = rs.getString("replyCreator");
                 timestamp = rs.getTimestamp("replyDate");
+                topicnum = rs.getInt("topicID");
                 
                 //create a new messagepost object
-                post = new MessagePost (postnum, title, creator, message, timestamp);
+                post = new MessagePost (postnum, title, creator, message, timestamp, topicnum);
                 
                 //add new object to the arraylist
                 messagePost.add(post);

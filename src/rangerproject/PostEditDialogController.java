@@ -28,10 +28,11 @@ public class PostEditDialogController {
     private TextArea postMessage;
     
     // bring in the messagepost we can load info into
-    private MessagePost newPost;
+    private MessagePost editPost;
     
     //intitalize reply variables
     private int postID;
+    private int topicID;
     private String userName;
     private String newTitle;
     private String newMessage;
@@ -61,15 +62,17 @@ public class PostEditDialogController {
         return submitClick;
     }
     // this sets up the input fields to store the information the user inputs
-    public void setPost(int postID, String userName) {
+    public void setPost(int postID, int topicID, String userName, MessagePost editPost) {
         this.postID = postID;
+        this.topicID = topicID;
         this.userName = userName;
+        this.editPost = editPost;
         
      //   postTitle = new TextField();
      //   postMessage = new TextArea();
         
-     //   postTitle.setText(newPost.getReplyTitle());
-     //   postMessage.setText(newPost.getReplyMessage());
+        postTitle.setText(editPost.getReplyTitle());
+        postMessage.setText(editPost.getReplyMessage());
         
     }
     //TODO set up alert box
@@ -84,7 +87,7 @@ public class PostEditDialogController {
               newMessage = postMessage.getText();
               
               //add new reply to database
-              dbu.addReply(postID, newTitle, newMessage, userName);
+              dbu.editReply(topicID, postID, newTitle, newMessage, userName);
               
 
             // set boolean to true

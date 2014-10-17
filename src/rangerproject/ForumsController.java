@@ -238,12 +238,28 @@ public class ForumsController {
     @FXML
     private void handleEditReply() {
         MessagePost chosenPost = postTable.getSelectionModel().getSelectedItem();
+        int postID = chosenPost.getTopicID();
+        
         if (chosenPost != null) {
             if (chosenPost.getReplyCreator().equals(rangers.getUsername())) {
                 boolean newPost = rangers.showPostEditDialog(chosenPost);
                 if (newPost) {
-                    updateReplyTable();
+                    
+                    
+                rangers.updateMessageTopics();
+
+                rangers.updateMessagePosts(postID);
+            
+                topicTable.setItems(rangers.getTopics());
+            
+                postTable.setItems(rangers.getPosts());
+            
+                updateReplyTable();
+                       
                 }
+            }
+            else {
+                System.out.println("You are not the reply creator!!");
             }
         }
 
