@@ -324,6 +324,54 @@ public class Rangers extends Application {
         
     }
     
+    
+    // use this to open the newReply box if clicked on in the forums.fxml
+    public boolean showNewPostDialog (MessagePost message) {
+        int postID = message.getPostID();
+        String userName = message.getReplyCreator();
+        
+        try {
+            // load the FXML
+            FXMLLoader newPostLoader = new FXMLLoader();
+            newPostLoader.setLocation(Rangers.class.getResource("NewPostDialog.fxml"));
+            AnchorPane page = (AnchorPane) newPostLoader.load();
+            
+            //create the dialog stage that is needed to display the FXML
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("New Reply");
+            
+            // the below is used to prevent user from messing with other windows
+            // until they have finished with this window
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+            
+            // set the post we want to view in the controller
+            // create a dialog  
+       //   PostEditDialogController controller = new PostEditDialogController();
+            NewPostDialogController controller = newPostLoader.<NewPostDialogController>getController();
+            // get the stage we want to use
+            controller.setDialogStage(dialogStage);
+            
+            
+            
+            controller.setPost(postID, userName);
+            
+            //show the dialog and wait until the user closes it out
+            dialogStage.showAndWait();    
+            
+            //return the boolean so we know they submitted the msg
+            return controller.isSubmitClick();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        
+    }
+    
+    
  //    public boolean showRatingDialog (int TopicID, String topicTitle) {
      public boolean showRatingDialog (MessageTopic topic) {     
     

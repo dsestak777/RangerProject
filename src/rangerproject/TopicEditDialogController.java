@@ -29,10 +29,10 @@ public class TopicEditDialogController {
     private MessageTopic editTopic;
     
     //initialize Post variables
-    private int userID;
+    private int postID;
     private String userName;
-    private String newTitle;
-    private String newMessage;
+    private String editTitle;
+    private String editMessage;
     
     // set up a stage for this
     private Stage topicDialogStage;
@@ -63,6 +63,9 @@ public class TopicEditDialogController {
         this.editTopic = editTopic;
         this.userName = userName;
         
+        //get the topic ID
+        postID = editTopic.getPostID();
+        
         // prompt the input fields to recieve input
         topicTitle.setText(editTopic.getPostTitle());
         message.setText(editTopic.getPostMessage());
@@ -75,13 +78,13 @@ public class TopicEditDialogController {
         if (isInputValid()) {
             // get the info from the input fields and load it 
             // into the object
-          newTitle =  topicTitle.getText();
-          newMessage =  message.getText();
+          editTitle =  topicTitle.getText();
+          editMessage =  message.getText();
             
             submitClick = true;
             
             //add New Post to database
-            dbu.addPost(newTitle, userName, userID, newMessage);
+            dbu.editPost(postID, editTitle, userName, editMessage);
             
             
             

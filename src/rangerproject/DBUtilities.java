@@ -599,16 +599,13 @@ public class DBUtilities {
     }
     
      //method used to edit a Topic the database
-    public static void editPost (int postID, String title, String userName, String message) {
+    public static void editPost (int postNum, String title, String userName, String message) {
         
         //get the current data 
         java.sql.Date date = getCurrentJavaSqlDate();
         
         //check if the user is logged in
         Boolean log = isUserLoggedIN(userName);
-        
-        //list & initializ local variable
-        int postNum = 0;
         
         //if not logged in disregard
         if (log == false ) {
@@ -625,13 +622,15 @@ public class DBUtilities {
             try { 
             
                 //SQL string to add new post to postindex
-                String topicEdit = "INSERT INTO postindex (postTitle, postMessage) VALUES (?,?) WHERE postID = ?";
+           //     String topicEdit = "INSERT INTO postindex (postTitle, postMessage) VALUES (?,?) WHERE postID = ?";
+           //     String topicEdit = "UPDATE postindex SET (postTitle, postMessage) VALUES (?,?) WHERE postID = ?";
+                String topicEdit = "UPDATE postindex SET postTitle=?, postMessage=? WHERE postID=?";
         
                 checkConnect();
                 pstmt = con.prepareStatement(topicEdit);
                 pstmt.setString(1, title);
                 pstmt.setString(2, message);
-                pstmt.setInt(3, postID);
+                pstmt.setInt(3, postNum);
                
                 pstmt.executeUpdate();
                 

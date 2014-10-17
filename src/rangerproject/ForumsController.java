@@ -132,6 +132,11 @@ public class ForumsController {
             if (chosenTopic.getPostCreator().equals(rangers.getUsername())) {
                 boolean newTopicClick = rangers.showTopicEditDialog(chosenTopic);
                 if (newTopicClick) {
+                    
+                    rangers.updateMessageTopics();
+
+                    topicTable.setItems(rangers.getTopics());
+                    
                     updateTopicTable();
 
                 }
@@ -153,11 +158,9 @@ public class ForumsController {
 
         if (newTopicClick) {
 
-            // add the topic to the dynamic list
-            //   rangers.getTopics().add(tempTopic);
             //update the table
             rangers.updateMessageTopics();
-
+            // add the topic to the dynamic list
             topicTable.setItems(rangers.getTopics());
 
             updateTopicTable();
@@ -173,10 +176,17 @@ public class ForumsController {
         // create a new reply
         MessagePost tempReply = new MessagePost();
 
-        //  
+        //update table to make sure not null when selected
+    //    rangers.updateMessageTopics();
+    //    topicTable.setItems(rangers.getTopics());
+    //    updateTopicTable();
+        
+        //get Topic from table  
         MessageTopic chosenTopic = topicTable.getSelectionModel().getSelectedItem();
         
         postID = chosenTopic.getPostID();
+        
+        
         System.out.println(chosenTopic.getPostID());
 
         // set the tempReply's id
@@ -187,7 +197,7 @@ public class ForumsController {
         //load the info
         showPostInfo(tempReply);
         //launch the new display
-        boolean newReply = rangers.showPostEditDialog(tempReply);
+        boolean newReply = rangers.showNewPostDialog(tempReply);
 
         if (newReply) {
           
