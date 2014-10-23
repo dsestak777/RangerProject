@@ -43,6 +43,9 @@ public class ForumsController {
     @FXML // takes the Post message
     private TableColumn<MessageTopic, String> message;
     
+    @FXML
+    private TableColumn <MessageTopic, Number> rating;
+    
     
     // these are for the replies table
     @FXML
@@ -113,6 +116,8 @@ public class ForumsController {
         author.setCellValueFactory(cellData -> cellData.getValue().getPostCreatorProperty());
         // fourth column
         message.setCellValueFactory(cellData -> cellData.getValue().getPostMessageProperty());
+        //fifth column
+        rating.setCellValueFactory(cellData -> cellData.getValue().getPostRatingProperty());
         // below is an event listener that allows us to "listen" for clicks on the topic table
         // as a user clicks on the table it allows them to see the replies using the handleViewTopic 
         // method below
@@ -253,6 +258,8 @@ public class ForumsController {
         author.setCellValueFactory(cellData -> cellData.getValue().getPostCreatorProperty());
         // fourth column
         message.setCellValueFactory(cellData -> cellData.getValue().getPostMessageProperty());
+        //fifth column
+        rating.setCellValueFactory(cellData -> cellData.getValue().getPostRatingProperty());
     }
     // this is a utility method we use to update the replies tables after the tables 
     // are modified
