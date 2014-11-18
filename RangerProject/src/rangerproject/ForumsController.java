@@ -2,7 +2,6 @@
  * This controller controls the main forum selection scene.  There are 4 columns
  * that is needs populated. Date Posted, Topic, Author, # of Replies.
  * There are 2 buttons as well, 1 to create a new topic and 1 to view a topic
- * Testing the update!
 
  */
 package rangerproject;
