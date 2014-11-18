@@ -28,11 +28,21 @@ public class PostEditDialogController {
     private TextArea postMessage;
     
     // bring in the messagepost we can load info into
-    private MessagePost newPost;
+    private MessagePost editPost;
+    
+    //intitalize reply variables
+    private int postID;
+    private int topicID;
+    private String userName;
+    private String newTitle;
+    private String newMessage;
+    
     // set up a new stage
-    private Stage postDialogStage;
+    private static Stage postDialogStage;
     // set up a boolean to know if someone has hit the submit button
     private boolean submitClick = false;
+    //Database Utilities Class
+    DBUtilities dbu;
     
     // empty constructor
     public PostEditDialogController() {
@@ -45,21 +55,24 @@ public class PostEditDialogController {
     
     // set the dialog for this stage
     public void setDialogStage(Stage postDialogStage) {
-        this.postDialogStage = postDialogStage;
+        PostEditDialogController.postDialogStage = postDialogStage;
     }
     // find out if submit has been clicked on
     public boolean isSubmitClick() {
         return submitClick;
     }
     // this sets up the input fields to store the information the user inputs
-    public void setPost(MessagePost newPost) {
-        this.newPost = newPost;
+    public void setPost(int postID, int topicID, String userName, MessagePost editPost) {
+        this.postID = postID;
+        this.topicID = topicID;
+        this.userName = userName;
+        this.editPost = editPost;
         
-        postTitle = new TextField();
-        postMessage = new TextArea();
+     //   postTitle = new TextField();
+     //   postMessage = new TextArea();
         
-        postTitle.setText(newPost.getReplyTitle());
-        postMessage.setText(newPost.getReplyMessage());
+        postTitle.setText(editPost.getReplyTitle());
+        postMessage.setText(editPost.getReplyMessage());
         
     }
     //TODO set up alert box
@@ -68,11 +81,21 @@ public class PostEditDialogController {
     private void onSubmit() {
         if (isInputValid()) {
             // load the user info into the post
-            newPost.setReplyTitle(postTitle.getText());
-            newPost.setReplyMessage(postMessage.getText());
+           // newPost.setReplyTitle(postTitle.getText());
+           // newPost.setReplyMessage(postMessage.getText());
+              newTitle = postTitle.getText();
+              newMessage = postMessage.getText();
+              
+              //add new reply to database
+              dbu.editReply(topicID, postID, newTitle, newMessage, userName);
+              
+
             // set boolean to true
             submitClick = true;
             //close the dialog window
+           
+            
+            
             postDialogStage.close();
         }
         else {

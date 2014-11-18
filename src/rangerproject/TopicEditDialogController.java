@@ -26,11 +26,20 @@ public class TopicEditDialogController {
     private TextArea message;
     
     // bring in a messageTopic we can load info into
-    private MessageTopic newTopic;
+    private MessageTopic editTopic;
+    
+    //initialize Post variables
+    private int postID;
+    private String userName;
+    private String editTitle;
+    private String editMessage;
+    
     // set up a stage for this
     private Stage topicDialogStage;
     // set up submit boolean to know if it has been clicked
     private boolean submitClick;
+    //Database Utilities Class
+    DBUtilities dbu;
     
     //empty constructor
     public TopicEditDialogController () {
@@ -49,11 +58,17 @@ public class TopicEditDialogController {
         return submitClick;
     }
     // this is supposed to fire off in the rangers file
-    public void setTopic(MessageTopic newTopic) {
-        this.newTopic = newTopic;
+ //   public void setTopic(MessageTopic newTopic) {
+     public void setTopic(String userName, MessageTopic editTopic) {
+        this.editTopic = editTopic;
+        this.userName = userName;
+        
+        //get the topic ID
+        postID = editTopic.getPostID();
+        
         // prompt the input fields to recieve input
-        topicTitle.setText(newTopic.getPostTitle());
-        message.setText(newTopic.getPostMessage());
+        topicTitle.setText(editTopic.getPostTitle());
+        message.setText(editTopic.getPostMessage());
         
     }
     //TODO need an alert box for below
@@ -63,10 +78,16 @@ public class TopicEditDialogController {
         if (isInputValid()) {
             // get the info from the input fields and load it 
             // into the object
-            newTopic.setPostTitle(topicTitle.getText());
-            newTopic.setPostMessage(message.getText());
+          editTitle =  topicTitle.getText();
+          editMessage =  message.getText();
             
             submitClick = true;
+            
+            //add New Post to database
+            dbu.editPost(postID, editTitle, userName, editMessage);
+            
+            
+            
             topicDialogStage.close();
         }
         else {

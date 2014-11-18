@@ -50,8 +50,8 @@ public class WelcomeController {
     public void setUsername (Rangers ranger) {
         this.ranger = ranger;
         
-        name.setText(ranger.getPassword());
-        password.setText(ranger.getUsername());
+        password.setText(ranger.getPassword());
+        name.setText(ranger.getUsername());
     }
     
 

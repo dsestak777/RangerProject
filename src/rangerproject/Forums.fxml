@@ -48,10 +48,9 @@
                               <TableView fx:id="topicTable" prefHeight="395.0" prefWidth="681.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <columns>
                                   <TableColumn fx:id="date" prefWidth="103.0" text="Date Posted" />
-                                  <TableColumn fx:id="title" prefWidth="130.0" text="Topic Name" />
-                                    <TableColumn fx:id="author" minWidth="0.0" prefWidth="188.0" text="Author" />
-                                    <TableColumn fx:id="message" prefWidth="128.0" text="Message" />
-                                    <TableColumn fx:id="rating" prefWidth="131.0" text="Rating" />
+                                  <TableColumn fx:id="title" prefWidth="195.0" text="Topic Name" />
+                                    <TableColumn fx:id="author" minWidth="0.0" prefWidth="123.0" text="Author" />
+                                    <TableColumn fx:id="message" prefWidth="259.0" text="Message" />
                                 </columns>
                                  <tooltip>
                                     <Tooltip text="Click on a Topic to view those" />

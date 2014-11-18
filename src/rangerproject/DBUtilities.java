@@ -41,6 +41,7 @@ public class DBUtilities {
     private static String createUsersString;
     private static String createPostIndexString;
     private static String createPostReplyTable;
+    private static String dropTableUsers;
     private static PreparedStatement pstmt;
     private static ResultSet rs;
     private static CallableStatement ca;
@@ -243,6 +244,42 @@ public class DBUtilities {
  
     }
     
+    public static void deleteTables() { 
+        
+     con=null;
+     stmt=null;
+     
+     dropTableUsers = "DROP TABLE IF EXISTS users"; 
+     String dropTablePostIndex = "DROP TABLE IF EXISTS postindex";
+     
+     
+        try {
+         
+         checkConnect();
+         
+         stmt.executeUpdate(dropTableUsers);
+         stmt.executeUpdate(dropTablePostIndex);
+         
+         for (int i=1; i<=100; i++ ) {
+            
+            String dropPostReplyTable = "DROP TABLE IF EXISTS postreply"+i;        
+            stmt.executeUpdate(dropPostReplyTable);     
+         }
+         
+        
+         System.out.println("tables deleted!");
+         
+        }
+        catch (SQLException e) {
+            
+            System.out.println("table deletion error!");
+            System.out.print(e);
+            
+        }
+     
+        
+    }
+     
      //method to check if a user is logged in
     public static boolean isUserLoggedIN (String name) {
         
@@ -264,6 +301,11 @@ public class DBUtilities {
             
             //get loggedIN variable from database for this user
             loggedIN = rs.getBoolean("userLoggedIN");
+            
+                if (loggedIN) {System.out.println("user is logged in!");}
+                else {System.out.println("user is not logged in!");}
+                
+            
             }
             
         }
@@ -472,7 +514,7 @@ public class DBUtilities {
           
     }
     
-    //method used to add a new Post to the database
+    //method used to add a new Topic to the database
     public static void addPost (String title, String userName, int userID, String message) {
         
         //get the current data 
@@ -511,7 +553,7 @@ public class DBUtilities {
                 pstmt.setDate(5,date);
                 pstmt.executeUpdate();
                 
-                System.out.println("New Post Added!");
+                System.out.println("New Topic Added!");
                 
             }
             catch (SQLException e ) {
@@ -556,8 +598,58 @@ public class DBUtilities {
         }
     }
     
-    //metrhod used to add replies to a message post
-     public static void addReply (int postID, String title, String message, String userName) {
+    //method used to edit a Topic the database
+    public static void editPost (int postNum, String title, String userName, String message) {
+        
+        //get the current data 
+        java.sql.Date date = getCurrentJavaSqlDate();
+        
+        //check if the user is logged in
+        Boolean log = isUserLoggedIN(userName);
+        
+        //if not logged in disregard
+        if (log == false ) {
+            
+            // user not logged in
+            System.out.println("User not logged in!!");
+            
+            return;
+            
+        //if user is logged in add new post     
+        } else {
+            
+            //try to add new post to postindex
+            try { 
+            
+                //SQL string to add new post to postindex
+                String topicEdit = "UPDATE postindex SET postTitle=?, postMessage=? WHERE postID=?";
+        
+                checkConnect();
+                pstmt = con.prepareStatement(topicEdit);
+                pstmt.setString(1, title);
+                pstmt.setString(2, message);
+                pstmt.setInt(3, postNum);
+               
+                pstmt.executeUpdate();
+                
+                System.out.println("Topic Edit Success!");
+                
+            }
+            catch (SQLException e ) {
+                
+                System.out.println("execute update error!");
+                System.out.print(e);
+                
+                
+            }
+            
+          
+        }
+    }
+    
+    
+    //method used to add replies to a message post
+     public static void addReply (int topicID, String title, String message, String userName) {
         
         // get the current data
         java.sql.Date date = getCurrentJavaSqlDate();
@@ -580,10 +672,10 @@ public class DBUtilities {
             try { 
                 
                 //use postID to get name of new reply table
-                String table = "postreply"+postID;
+                String table = "postreply"+topicID;
                 
                  //SQL string to insert new reply into table 
-                String addNewPost = "INSERT INTO " +table+ " (replyTitle, replyMessage, replyCreator, replyDate) VALUES (?,?,?,?)";
+                String addNewPost = "INSERT INTO " +table+ " (replyTitle, replyMessage, replyCreator, replyDate, topicID) VALUES (?,?,?,?,?)";
         
                 checkConnect();
                 pstmt = con.prepareStatement(addNewPost);
@@ -592,6 +684,7 @@ public class DBUtilities {
                 pstmt.setString(3, userName);
              //   pstmt.setDate(5,date.valueOf("1998-1-17"));
                 pstmt.setDate(4,date);
+                pstmt.setInt(5, topicID);
                 pstmt.executeUpdate();
                 
                 System.out.println("New Reply Added!");
@@ -609,6 +702,59 @@ public class DBUtilities {
         }
     }
     
+    //method used to add replies to a message post
+     public static void editReply (int topicID, int replyID, String title, String message, String userName) {
+        
+        // get the current data
+        java.sql.Date date = getCurrentJavaSqlDate();
+        
+        //check if the user is logged in 
+        Boolean log = isUserLoggedIN(userName);
+        
+        //if the user is not logged in then return
+        if (log == false ) {
+            
+            // user not logged in
+            System.out.println("User not logged in!!");
+            
+            return;
+        
+        //if the user is logged in then add the reply    
+        } else {
+        
+            
+            try { 
+                
+                //use postID to get name of new reply table
+                String table = "postreply"+topicID;
+                
+                 //SQL string to insert new reply into table 
+            //    String addNewPost = "INSERT INTO " +table+ " (replyTitle, replyMessage, replyCreator, replyDate, topicID) VALUES (?,?,?,?,?)";
+                String editPost = "UPDATE " +table+ " SET replyTitle=?, replyMessage=? WHERE replyID=?";
+           
+                checkConnect();
+                pstmt = con.prepareStatement(editPost);
+                pstmt.setString(1, title);
+                pstmt.setString(2, message);
+                pstmt.setInt(3, replyID);
+                pstmt.executeUpdate();
+                
+                System.out.println("New Reply Added!");
+                
+            }
+            catch (SQLException e ) {
+                
+                System.out.println("execute add reply update error!");
+                System.out.print(e);
+                
+                
+            }
+            
+            
+        }
+    } 
+     
+     
      //method used to create a reply table for each new post
     public static void createReplyTable (int postNum) {
         
@@ -622,6 +768,7 @@ public class DBUtilities {
                 + "replyMessage varchar(300) NOT NULL,"
                 + "replyCreator varchar(30) NOT NULL,"
                 + "replyDate date NOT NULL," 
+                + "topicID int(11) NOT NULL,"  
                 + "PRIMARY KEY (replyID))"
                 + "ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1";
          
@@ -874,6 +1021,7 @@ public class DBUtilities {
         //list all local variables 
         ArrayList<MessagePost> messagePost = new ArrayList<>();
         int postnum;
+        int topicnum;
         String title;
         String creator;
         String message;
@@ -889,26 +1037,26 @@ public class DBUtilities {
         //try to get topic from postindex and postreply tables
         try {
             
-            checkConnect();
-            pstmt = con.prepareStatement(getTopic);
-            pstmt.setInt(1, postID);
-            rs = pstmt.executeQuery();
+        //    checkConnect();
+        //    pstmt = con.prepareStatement(getTopic);
+        //    pstmt.setInt(1, postID);
+        //    rs = pstmt.executeQuery();
             
             //while there is results get the data 
-            while (rs.next()) {
+        //    while (rs.next()) {
             
-                postnum = rs.getInt("postID");
-                title = rs.getString("postTitle");
-                creator = rs.getString("postCreatorName");
-                message = rs.getString("postMessage");
-                timestamp = rs.getTimestamp("postDate");
+        //        postnum = rs.getInt("postID");
+        //        title = rs.getString("postTitle");
+        //        creator = rs.getString("postCreatorName");
+        //        message = rs.getString("postMessage");
+        //        timestamp = rs.getTimestamp("postDate");
                 
                 //create a new messagepost object
-                post = new MessagePost (postnum, title, creator, message, timestamp);
+        //        post = new MessagePost (postnum, title, creator, message, timestamp);
                 
                 //add new object to arraylist
-                messagePost.add(post);
-            }   
+        //        messagePost.add(post);
+        //     }   
                 
             checkConnect();
             pstmt = con.prepareStatement(viewPost);
@@ -923,9 +1071,10 @@ public class DBUtilities {
                 message = rs.getString("replyMessage");
                 creator = rs.getString("replyCreator");
                 timestamp = rs.getTimestamp("replyDate");
+                topicnum = rs.getInt("topicID");
                 
                 //create a new messagepost object
-                post = new MessagePost (postnum, title, creator, message, timestamp);
+                post = new MessagePost (postnum, title, creator, message, timestamp, topicnum);
                 
                 //add new object to the arraylist
                 messagePost.add(post);
