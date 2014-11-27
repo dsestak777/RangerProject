@@ -231,6 +231,9 @@ public class ForumsController {
             if (rateTopicClick) {
                    
                     // updateTopicTable();
+                rangers.updateMessageTopics();
+                
+                topicTable.setItems(rangers.getTopics());
 
             }
 
@@ -320,6 +323,8 @@ public class ForumsController {
         author.setCellValueFactory(cellData -> cellData.getValue().getPostCreatorProperty());
         // fourth column
         message.setCellValueFactory(cellData -> cellData.getValue().getPostMessageProperty());
+        //fifth column
+        ratings.setCellValueFactory(cellData -> cellData.getValue().getPostRatingProperty());
     }
 
     // this is a utility method we use to update the replies tables after the tables 

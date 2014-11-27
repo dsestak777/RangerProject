@@ -48,6 +48,8 @@ public class TopicRatingDialogController  {
     private static Stage postRatingStage;
     // set up a boolean to know if someone has hit the submit button
     private boolean submitClick = false;
+    //Database Utilities Class
+    DBUtilities dbu;
    
     // empty constructor
     public TopicRatingDialogController () {
@@ -153,6 +155,9 @@ public class TopicRatingDialogController  {
          //   newPost.setReplyTitle(postTitle.getText());
             
          //   newPost.setReplyMessage(postMessage.getText());
+            
+            dbu.ratePost(rating, topic.getPostID());
+            System.out.println(rating);
             
             // set boolean to true
             submitClick = true;
