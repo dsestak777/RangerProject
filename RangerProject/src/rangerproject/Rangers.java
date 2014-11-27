@@ -5,6 +5,7 @@
  */
 package rangerproject;
 
+import com.sun.javafx.css.StyleManager;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -106,6 +107,9 @@ public class Rangers extends Application {
     
     @Override
     public void start(Stage primaryStage) throws Exception {
+        
+        Application.setUserAgentStylesheet(null);
+        StyleManager.getInstance().addUserAgentStylesheet("/rangerproject/RangerTheme.css");
         
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Rangers Forums");

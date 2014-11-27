@@ -1,0 +1,61 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 27, 2014, 9:54:23 AM
+    Author     : Bunk
+*/
+
+/*
+Rangers colors are:
+#BD1021 - Red
+#FFFFFF - White
+#003279 - Blue
+*/
+
+
+.AnchorPane {
+    -fx-background-color: #003279;
+}
+
+.background {
+    -fx-background-color: #003279;
+}
+
+.gridpane {
+    -fx-background-color: #003279;
+}
+
+.splitpane {
+    -fx-background-color: #003279;
+}
+
+.text-field {
+    -fx-font-size: 10pt;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-color: #BD1021;
+}
+
+.label {
+    -fx-font-size: 10pt;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-color: #BD1021;
+}
+
+.button {
+    -fx-padding: 5 22 5 22;   
+    -fx-border-color: #BD1021;
+    -fx-border-width: 2;
+    -fx-background-radius: 0;
+    -fx-background-color: #FFFFFF;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 10pt;
+    -fx-text-fill: #BD1021;
+    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+}
+
+
+
+
