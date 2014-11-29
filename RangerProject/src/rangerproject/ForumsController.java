@@ -15,6 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
@@ -146,7 +147,12 @@ public class ForumsController {
 
                 }
             } else {
-                System.out.println("You are not the post creator!!");
+                System.out.println("Not that user!");
+                Alert alert = new Alert (Alert.AlertType.INFORMATION);
+                alert.setTitle("Wrong User!");
+                alert.setHeaderText(null);
+                alert.setContentText("The topic may need some work but why don't we let the creator of the topic decide that.");
+                alert.showAndWait();
             }
         } else {
             System.out.println("There is an issue loading the data!");
@@ -267,7 +273,12 @@ public class ForumsController {
                 }
             }
             else {
-                System.out.println("You are not the reply creator!!");
+                System.out.println("Not that user!");
+                Alert alert = new Alert (Alert.AlertType.INFORMATION);
+                alert.setTitle("Wrong User!");
+                alert.setHeaderText(null);
+                alert.setContentText("The reply may need some work but why don't we let the creator of the reply decide that.");
+                alert.showAndWait();
             }
         }
 
