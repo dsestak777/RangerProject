@@ -17,31 +17,40 @@ Rangers colors are:
 
 
 .AnchorPane {
-    -fx-background-color: #003279;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #BD1021;
+    -fx-border-width: 4;
+    
 }
 
 .background {
-    -fx-background-color: #003279;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #BD1021;
+    -fx-border-width: 4;
 }
 
 .gridpane {
-    -fx-background-color: #003279;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #BD1021;
+    -fx-border-width: 4;
 }
 
 .splitpane {
-    -fx-background-color: #003279;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #BD1021;
+    -fx-border-width: 4;
 }
 
 .text-field {
     -fx-font-size: 10pt;
     -fx-font-family: "Segoe UI Semibold";
-    -fx-font-color: #BD1021;
+    -fx-text-fill: #003279;
 }
 
 .label {
     -fx-font-size: 10pt;
     -fx-font-family: "Segoe UI Semibold";
-    -fx-font-color: #BD1021;
+    -fx-text-fill: #003279;
 }
 
 .button {
@@ -49,13 +58,48 @@ Rangers colors are:
     -fx-border-color: #BD1021;
     -fx-border-width: 2;
     -fx-background-radius: 0;
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: #000000;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 10pt;
+    -fx-text-fill: #BD1021;
+    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+    
+}
+
+.button-hover {
+    -fx-padding: 5 22 5 22;   
+    -fx-border-color: #BD1021;
+    -fx-border-width: 2;
+    -fx-background-radius: 0;
+    -fx-background-color: #ffffff;
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 10pt;
     -fx-text-fill: #BD1021;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
 }
+/*
+Need to figure out how to make this look nice.  Looks kind of stupid right now!
+.table-row-cell:empty {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #BD1021;
+}
+ 
+.table-row-cell:hover{
+    -fx-background-color: #ffffff;
+}
+ 
+.table-row-cell:selected{
+    -fx-background-color: #BD1021;
+}
 
+.table-row-cell {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #BD1021;
+}
 
+.table-column-cell {
+    -fx-background-color: #003279;
+    -fx-border-color: #BD1021;
+}
 
-
+*/
