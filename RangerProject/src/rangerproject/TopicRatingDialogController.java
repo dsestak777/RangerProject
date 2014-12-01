@@ -70,7 +70,7 @@ public class TopicRatingDialogController  {
                             
                     {
                         //set rating based upon slider position
-                        rating = (int) (newValue.intValue() / 100.0);
+                        rating = (int) (newValue.intValue() );
                  
                       
                        
